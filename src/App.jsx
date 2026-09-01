@@ -240,4 +240,738 @@ export default function App() {
 
           {/* DESKTOP NAV */}
           <nav className="hidden md:flex items-center gap-6">
+            <button onClick={() => setActiveTab('home')} className={`text-sm font-medium transition-colors ${activeTab === 'home' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400'}`}>
+              Home
+            </button>
+            <button onClick={() => setActiveTab('catalog')} className={`text-sm font-medium transition-colors ${activeTab === 'catalog' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400'}`}>
+              Catalog
+            </button>
+            <button onClick={() => setActiveTab('about')} className={`text-sm font-medium transition-colors ${activeTab === 'about' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400'}`}>
+              About Us
+            </button>
+            <button onClick={() => setActiveTab('contact')} className={`text-sm font-medium transition-colors ${activeTab === 'contact' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400'}`}>
+              Contact
+            </button>
+          </nav>
+
+          {/* SEARCH, LANG & CART */}
+          <div className="flex items-center gap-3">
+            {/* Search Bar Desktop */}
+            <div className="hidden lg:flex items-center bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 focus-within:border-cyan-500 transition-colors">
+              <svg className="w-4 h-4 text-slate-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <input 
+                type="text" 
+                placeholder="Search products..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent text-sm text-slate-200 focus:outline-none w-40"
+              />
+            </div>
+
+            {/* Mobile Search Toggle */}
+            <button 
+              onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+              className="lg:hidden p-2 text-slate-300 hover:text-cyan-400"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </button>
+
+            {/* Lang Toggle */}
+            <button 
+              onClick={() => setLang(lang === 'EN' ? 'DE' : 'EN')}
+              className="px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 text-cyan-400 border border-slate-700 hover:bg-slate-700 transition-colors"
+            >
+              {lang}
+            </button>
+
+            {/* Cart Button */}
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 rounded-xl bg-slate-800 text-slate-200 border border-slate-700 hover:border-cyan-500 transition-all"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              {cart.length > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-cyan-500 text-black font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow">
+                  {cart.reduce((sum, item) => sum + item.quantity, 0)}
+                </span>
+              )}
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-slate-300 hover:text-cyan-400"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Search Expand */}
+        {mobileSearchOpen && (
+          <div className="lg:hidden px-4 pb-3 pt-1 border-t border-slate-800 bg-slate-900">
+            <div className="flex items-center bg-slate-950 border border-slate-800 rounded-lg px-3 py-2">
+              <svg className="w-4 h-4 text-slate-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <input 
+                type="text" 
+                placeholder="Search products..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent text-sm text-slate-200 focus:outline-none w-full"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Nav Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-slate-900 border-t border-slate-800 px-4 py-4 space-y-3">
+            <button onClick={() => { setActiveTab('home'); setMobileMenuOpen(false); }} className="block w-full text-left font-medium text-slate-200 hover:text-cyan-400 py-1">Home</button>
+            <button onClick={() => { setActiveTab('catalog'); setMobileMenuOpen(false); }} className="block w-full text-left font-medium text-slate-200 hover:text-cyan-400 py-1">Catalog</button>
+            <button onClick={() => { setActiveTab('about'); setMobileMenuOpen(false); }} className="block w-full text-left font-medium text-slate-200 hover:text-cyan-400 py-1">About Us</button>
+            <button onClick={() => { setActiveTab('contact'); setMobileMenuOpen(false); }} className="block w-full text-left font-medium text-slate-200 hover:text-cyan-400 py-1">Contact</button>
+          </div>
+        )}
+      </header>
+
+      {/* MAIN CONTENT AREA */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
+        {/* HOME TAB */}
+        {activeTab === 'home' && (
+          <div className="space-y-16">
+            {/* HERO SECTION */}
+            <div className="text-center py-16 px-4 bg-gradient-to-b from-slate-900 to-slate-950 rounded-3xl border border-slate-800 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(6,182,212,0.15),rgba(255,255,255,0))]"></div>
+              <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-4 bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent">
+                Direct Peptide- & HGH-Manufaktur
+              </h1>
+              <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8">
+                {lang === 'EN' ? 'No middlemen. Successfully established in South America, now new in Europe.' : 'Keine Zwischenmänner. Erfolgreich in Südamerika etabliert, jetzt neu in Europa.'}
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <button 
+                  onClick={() => setActiveTab('catalog')} 
+                  className="px-8 py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold transition-all shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+                >
+                  {lang === 'EN' ? 'Browse Catalog' : 'Unser Katalog'}
+                </button>
+                <button 
+                  onClick={() => setActiveTab('about')} 
+                  className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold transition-all"
+                >
+                  {lang === 'EN' ? 'Learn More' : 'Über uns'}
+                </button>
+              </div>
+            </div>
+
+            {/* FEATURED PRODUCTS PREVIEW */}
+            <div>
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-bold tracking-tight">Featured Products</h2>
+                <button 
+                  onClick={() => setActiveTab('catalog')}
+                  className="text-cyan-400 hover:text-cyan-300 text-sm font-semibold flex items-center gap-1"
+                >
+                  View All ({allProducts.length}) &rarr;
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {allProducts.slice(0, 4).map(product => (
+                  <div key={product.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-cyan-500/50 transition-all">
+                    <div>
+                      <span className="text-[10px] font-semibold tracking-wider text-cyan-400 uppercase bg-cyan-500/10 px-2 py-1 rounded">
+                        {product.category}
+                      </span>
+                      <h3 className="font-semibold text-slate-200 mt-3 text-sm line-clamp-2">{product.name}</h3>
+                    </div>
+                    <div className="mt-6 flex items-center justify-between">
+                      <span className="text-xl font-black text-white">${product.price}</span>
+                      <button 
+                        onClick={() => addToCart(product)}
+                        className="px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500 hover:text-black text-cyan-400 font-semibold text-xs rounded-xl transition-all"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CATALOG TAB */}
+        {activeTab === 'catalog' && (
+          <div className="space-y-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-3xl font-black tracking-tight">Product Catalog</h1>
+                <p className="text-slate-400 text-sm">Explore our complete catalog of laboratory-tested kits.</p>
+              </div>
+              
+              {/* Category Filter */}
+              <div className="overflow-x-auto pb-2 md:pb-0">
+                <div className="flex gap-2 min-w-max">
+                  {categories.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        selectedCategory === cat 
+                          ? 'bg-cyan-500 text-black font-bold shadow-[0_0_10px_rgba(6,182,212,0.3)]' 
+                          : 'bg-slate-900 border border-slate-800 text-slate-300 hover:border-slate-700'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Products Grid */}
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-20 bg-slate-900 border border-slate-800 rounded-3xl">
+                <p className="text-slate-400">No products found matching your search or filter criteria.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredProducts.map(product => (
+                  <div key={product.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-cyan-500/50 transition-all shadow-sm">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-semibold tracking-wider text-cyan-400 uppercase bg-cyan-500/10 px-2 py-0.5 rounded">
+                          {product.category}
+                        </span>
+                        <span className="text-[10px] text-slate-500 font-mono">1 kit</span>
+                      </div>
+                      <h3 className="font-semibold text-slate-200 text-sm leading-snug">{product.name}</h3>
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                      <div>
+                        <span className="text-xs text-slate-400 block">Price / Kit</span>
+                        <span className="text-xl font-black text-white">${product.price}</span>
+                      </div>
+                      <button 
+                        onClick={() => addToCart(product)}
+                        className="px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs rounded-xl transition-all shadow-[0_0_10px_rgba(6,182,212,0.2)]"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ABOUT US TAB */}
+        {activeTab === 'about' && (
+          <div className="max-w-4xl mx-auto space-y-12 py-6">
+            <div className="text-center space-y-4">
+              <h1 className="text-4xl font-black tracking-tight">About Us</h1>
+              <p className="text-slate-400 text-lg">Direct manufacturing standards, uncompromising quality, and global reach.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-slate-900 border border-slate-800 p-8 rounded-3xl">
+              <div className="space-y-4">
+                <h3 className="text-2xl font-bold text-cyan-400">Our Heritage & Standards</h3>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  Originally established with high success across South American markets, Manufaktur brings elite direct peptide and HGH production standards straight to Europe. By cutting out middlemen and distributors, we guarantee direct-source pricing and strict quality assurance.
+                </p>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  Every kit undergoes strict oversight to ensure consistent purity and correct dosing for professional requirements.
+                </p>
+              </div>
+              <div className="flex justify-center">
+                <img 
+                  src={logoJPEG} 
+                  alt="Manufaktur Logo" 
+                  className="rounded-2xl border border-slate-700 shadow-xl max-h-64 object-cover w-full"
+                />
+              </div>
+            </div>
+
+            <div className="bg-slate-900 border border-slate-800 p-8 rounded-3xl space-y-6">
+              <h3 className="text-2xl font-bold text-center text-cyan-400">Production & Facility Preview</h3>
+              <div className="w-full overflow-hidden rounded-2xl border border-slate-700 shadow-xl bg-black flex justify-center">
+                <video 
+                  src={productionVID} 
+                  controls 
+                  autoPlay 
+                  muted 
+                  loop 
+                  className="max-h-[400px] w-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CONTACT TAB */}
+        {activeTab === 'contact' && (
+          <div className="max-w-xl mx-auto py-12 space-y-8">
+            <div className="text-center space-y-2">
+              <h1 className="text-3xl font-black tracking-tight">Contact Us</h1>
+              <p className="text-slate-400 text-sm">Reach out to our team directly via WhatsApp for inquiries or support.</p>
+            </div>
+
+            <div className="bg-slate-900 border border-slate-800 p-8 rounded-3xl text-center space-y-6">
+              <div className="w-16 h-16 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-full flex items-center justify-center mx-auto text-2xl shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                💬
+              </div>
+              <div>
+                <h3 className="text-lg font-bold">WhatsApp Support</h3>
+                <p className="text-slate-400 text-sm mt-1">Fast, reliable responses directly from our support desk.</p>
+              </div>
+              <a 
+                href="https://wa.me/4915200000000" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block w-full py-3.5 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+              >
+                Open WhatsApp Chat
+              </a>
+            </div>
+          </div>
+        )}
+
+      </main>
+
+      {/* CART SLIDE-OVER DRAWER */}
+      {isCartOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)}></div>
+          <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div className="w-screen max-w-md bg-slate-900 border-l border-slate-800 flex flex-col shadow-2xl">
+              
+              {/* Cart Header */}
+              <div className="p-6 border-b border-slate-800 flex items-center justify-between">
+                <h2 className="text-lg font-bold flex items-center gap-2">
+                  Shopping Cart <span className="text-xs bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded-full">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
+                </h2>
+                <button onClick={() => setIsCartOpen(false)} className="text-slate-400 hover:text-white p-1">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Cart Items List */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {cart.length === 0 ? (
+                  <div className="text-center py-20 text-slate-500 space-y-3">
+                    <svg className="w-12 h-12 mx-auto opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <p className="text-sm">Your cart is empty.</p>
+                  </div>
+                ) : (
+                  cart.map(item => (
+                    <div key={item.id} className="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex flex-col gap-3">
+                      <div className="flex justify-between items-start gap-2">
+                        <h4 className="font-semibold text-sm text-slate-200 leading-snug">{item.name}</h4>
+                        <span className="font-bold text-white">${item.price * item.quantity}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg p-1">
+                          <button onClick={() => updateQuantity(item.id, -1)} className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white bg-slate-800 rounded font-bold">-</button>
+                          <span className="text-xs font-semibold px-2">{item.quantity}</span>
+                          <button onClick={() => updateQuantity(item.id, 1)      <button onClick={() => setActiveTab('home')} className={`text-sm font-medium transition-colors ${activeTab === 'home' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400'}`}>
+              Home
+            </button>
+            <button onClick={() => setActiveTab('catalog')} className={`text-sm font-medium transition-colors ${activeTab === 'catalog' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400'}`}>
+              Catalog
+            </button>
+            <button onClick={() => setActiveTab('about')} className={`text-sm font-medium transition-colors ${activeTab === 'about' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400'}`}>
+              About Us
+            </button>
+            <button onClick={() => setActiveTab('contact')} className={`text-sm font-medium transition-colors ${activeTab === 'contact' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400'}`}>
+              Contact
+            </button>
+          </nav>
+
+          {/* SEARCH, LANG & CART */}
+          <div className="flex items-center gap-3">
+            {/* Search Bar Desktop */}
+            <div className="hidden lg:flex items-center bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 focus-within:border-cyan-500 transition-colors">
+              <svg className="w-4 h-4 text-slate-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <input 
+                type="text" 
+                placeholder="Search products..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent text-sm text-slate-200 focus:outline-none w-40"
+              />
+            </div>
+
+            {/* Mobile Search Toggle */}
+            <button 
+              onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+              className="lg:hidden p-2 text-slate-300 hover:text-cyan-400"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </button>
+
+            {/* Lang Toggle */}
+            <button 
+              onClick={() => setLang(lang === 'EN' ? 'DE' : 'EN')}
+              className="px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 text-cyan-400 border border-slate-700 hover:bg-slate-700 transition-colors"
+            >
+              {lang}
+            </button>
+
+            {/* Cart Button */}
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 rounded-xl bg-slate-800 text-slate-200 border border-slate-700 hover:border-cyan-500 transition-all"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              {cart.length > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-cyan-500 text-black font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow">
+                  {cart.reduce((sum, item) => sum + item.quantity, 0)}
+                </span>
+              )}
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-slate-300 hover:text-cyan-400"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Search Expand */}
+        {mobileSearchOpen && (
+          <div className="lg:hidden px-4 pb-3 pt-1 border-t border-slate-800 bg-slate-900">
+            <div className="flex items-center bg-slate-950 border border-slate-800 rounded-lg px-3 py-2">
+              <svg className="w-4 h-4 text-slate-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <input 
+                type="text" 
+                placeholder="Search products..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent text-sm text-slate-200 focus:outline-none w-full"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Nav Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-slate-900 border-t border-slate-800 px-4 py-4 space-y-3">
+            <button onClick={() => { setActiveTab('home'); setMobileMenuOpen(false); }} className="block w-full text-left font-medium text-slate-200 hover:text-cyan-400 py-1">Home</button>
+            <button onClick={() => { setActiveTab('catalog'); setMobileMenuOpen(false); }} className="block w-full text-left font-medium text-slate-200 hover:text-cyan-400 py-1">Catalog</button>
+            <button onClick={() => { setActiveTab('about'); setMobileMenuOpen(false); }} className="block w-full text-left font-medium text-slate-200 hover:text-cyan-400 py-1">About Us</button>
+            <button onClick={() => { setActiveTab('contact'); setMobileMenuOpen(false); }} className="block w-full text-left font-medium text-slate-200 hover:text-cyan-400 py-1">Contact</button>
+          </div>
+        )}
+      </header>
+
+      {/* MAIN CONTENT AREA */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* HOME TAB */}
+        {activeTab === 'home' && (
+          <div className="space-y-16">
+            {/* HERO SECTION */}
+            <div className="text-center py-16 px-4 bg-gradient-to-b from-slate-900 to-slate-950 rounded-3xl border border-slate-800 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(6,182,212,0.15),rgba(255,255,255,0))]"></div>
+              <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-4 bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent">
+                Direct Peptide- & HGH-Manufaktur
+              </h1>
+              <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8">
+                {lang === 'EN' ? 'No middlemen. Successfully established in South America, now new in Europe.' : 'Keine Zwischenmänner. Erfolgreich in Südamerika etabliert, jetzt neu in Europa.'}
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <button 
+                  onClick={() => setActiveTab('catalog')} 
+                  className="px-8 py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold transition-all shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+                >
+                  {lang === 'EN' ? 'Browse Catalog' : 'Unser Katalog'}
+                </button>
+                <button 
+                  onClick={() => setActiveTab('about')} 
+                  className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold transition-all"
+                >
+                  {lang === 'EN' ? 'Learn More' : 'Über uns'}
+                </button>
+              </div>
+            </div>
+
+            {/* FEATURED PRODUCTS PREVIEW */}
+            <div>
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-bold tracking-tight">Featured Products</h2>
+                <button 
+                  onClick={() => setActiveTab('catalog')}
+                  className="text-cyan-400 hover:text-cyan-300 text-sm font-semibold flex items-center gap-1"
+                >
+                  View All ({allProducts.length}) &rarr;
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {allProducts.slice(0, 4).map(product => (
+                  <div key={product.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-cyan-500/50 transition-all">
+                    <div>
+                      <span className="text-[10px] font-semibold tracking-wider text-cyan-400 uppercase bg-cyan-500/10 px-2 py-1 rounded">
+                        {product.category}
+                      </span>
+                      <h3 className="font-semibold text-slate-200 mt-3 text-sm line-clamp-2">{product.name}</h3>
+                    </div>
+                    <div className="mt-6 flex items-center justify-between">
+                      <span className="text-xl font-black text-white">${product.price}</span>
+                      <button 
+                        onClick={() => addToCart(product)}
+                        className="px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500 hover:text-black text-cyan-400 font-semibold text-xs rounded-xl transition-all"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CATALOG TAB */}
+        {activeTab === 'catalog' && (
+          <div className="space-y-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-3xl font-black tracking-tight">Product Catalog</h1>
+                <p className="text-slate-400 text-sm">Explore our complete catalog of laboratory-tested kits.</p>
+              </div>
+              
+              {/* Category Filter */}
+              <div className="overflow-x-auto pb-2 md:pb-0">
+                <div className="flex gap-2 min-w-max">
+                  {categories.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        selectedCategory === cat 
+                          ? 'bg-cyan-500 text-black font-bold shadow-[0_0_10px_rgba(6,182,212,0.3)]' 
+                          : 'bg-slate-900 border border-slate-800 text-slate-300 hover:border-slate-700'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Products Grid */}
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-20 bg-slate-900 border border-slate-800 rounded-3xl">
+                <p className="text-slate-400">No products found matching your search or filter criteria.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredProducts.map(product => (
+                  <div key={product.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-cyan-500/50 transition-all shadow-sm">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-semibold tracking-wider text-cyan-400 uppercase bg-cyan-500/10 px-2 py-0.5 rounded">
+                          {product.category}
+                        </span>
+                        <span className="text-[10px] text-slate-500 font-mono">1 kit</span>
+                      </div>
+                      <h3 className="font-semibold text-slate-200 text-sm leading-snug">{product.name}</h3>
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                      <div>
+                        <span className="text-xs text-slate-400 block">Price / Kit</span>
+                        <span className="text-xl font-black text-white">${product.price}</span>
+                      </div>
+                      <button 
+                        onClick={() => addToCart(product)}
+                        className="px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs rounded-xl transition-all shadow-[0_0_10px_rgba(6,182,212,0.2)]"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ABOUT US TAB */}
+        {activeTab === 'about' && (
+          <div className="max-w-4xl mx-auto space-y-12 py-6">
+            <div className="text-center space-y-4">
+              <h1 className="text-4xl font-black tracking-tight">About Us</h1>
+              <p className="text-slate-400 text-lg">Direct manufacturing standards, uncompromising quality, and global reach.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-slate-900 border border-slate-800 p-8 rounded-3xl">
+              <div className="space-y-4">
+                <h3 className="text-2xl font-bold text-cyan-400">Our Heritage & Standards</h3>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  Originally established with high success across South American markets, Manufaktur brings elite direct peptide and HGH production standards straight to Europe. By cutting out middlemen and distributors, we guarantee direct-source pricing and strict quality assurance.
+                </p>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  Every kit undergoes strict oversight to ensure consistent purity and correct dosing for professional requirements.
+                </p>
+              </div>
+              <div className="flex justify-center">
+                <img 
+                  src={logoJPEG} 
+                  alt="Manufaktur Logo" 
+                  className="rounded-2xl border border-slate-700 shadow-xl max-h-64 object-cover w-full"
+                />
+              </div>
+            </div>
+
+            <div className="bg-slate-900 border border-slate-800 p-8 rounded-3xl space-y-6">
+              <h3 className="text-2xl font-bold text-center text-cyan-400">Production & Facility Preview</h3>
+              <div className="w-full overflow-hidden rounded-2xl border border-slate-700 shadow-xl bg-black flex justify-center">
+                <video 
+                  src={productionVID} 
+                  controls 
+                  autoPlay 
+                  muted 
+                  loop 
+                  className="max-h-[400px] w-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CONTACT TAB */}
+        {activeTab === 'contact' && (
+          <div className="max-w-xl mx-auto py-12 space-y-8">
+            <div className="text-center space-y-2">
+              <h1 className="text-3xl font-black tracking-tight">Contact Us</h1>
+              <p className="text-slate-400 text-sm">Reach out to our team directly via WhatsApp for inquiries or support.</p>
+            </div>
+
+            <div className="bg-slate-900 border border-slate-800 p-8 rounded-3xl text-center space-y-6">
+              <div className="w-16 h-16 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-full flex items-center justify-center mx-auto text-2xl shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                💬
+              </div>
+              <div>
+                <h3 className="text-lg font-bold">WhatsApp Support</h3>
+                <p className="text-slate-400 text-sm mt-1">Fast, reliable responses directly from our support desk.</p>
+              </div>
+              <a 
+                href="https://wa.me/4915200000000" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block w-full py-3.5 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+              >
+                Open WhatsApp Chat
+              </a>
+            </div>
+          </div>
+        )}
+
+      </main>
+
+      {/* CART SLIDE-OVER DRAWER */}
+      {isCartOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)}></div>
+          <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div className="w-screen max-w-md bg-slate-900 border-l border-slate-800 flex flex-col shadow-2xl">
+              
+              {/* Cart Header */}
+              <div className="p-6 border-b border-slate-800 flex items-center justify-between">
+                <h2 className="text-lg font-bold flex items-center gap-2">
+                  Shopping Cart <span className="text-xs bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded-full">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
+                </h2>
+                <button onClick={() => setIsCartOpen(false)} className="text-slate-400 hover:text-white p-1">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Cart Items List */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {cart.length === 0 ? (
+                  <div className="text-center py-20 text-slate-500 space-y-3">
+                    <svg className="w-12 h-12 mx-auto opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <p className="text-sm">Your cart is empty.</p>
+                  </div>
+                ) : (
+                  cart.map(item => (
+                    <div key={item.id} className="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex flex-col gap-3">
+                      <div className="flex justify-between items-start gap-2">
+                        <h4 className="font-semibold text-sm text-slate-200 leading-snug">{item.name}</h4>
+                        <span className="font-bold text-white">${item.price * item.quantity}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg p-1">
+                          <button onClick={() => updateQuantity(item.id, -1)} className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white bg-slate-800 rounded font-bold">-</button>
+                          <span className="text-xs font-semibold px-2">{item.quantity}</span>
+                          <button onClick={() => updateQuantity(item.id, 1)
+                        </div>
+                        <span className="text-[10px] text-slate-500">1 kit / qty</span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Cart Footer / Checkout */}
+              {cart.length > 0 && (
+                <div className="p-6 border-t border-slate-800 bg-slate-900/50 space-y-4">
+                  <div className="flex justify-between items-center text-base font-bold">
+                    <span>Total Amount:</span>
+                    <span className="text-xl text-cyan-400">${totalPrice}</span>
+                  </div>
+                  <button 
+                    onClick={handleWhatsAppCheckout}
+                    className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2"
+                  >
+                    <span>Proceed to Checkout (WhatsApp)</span>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                    </svg>
+                  </button>
+                </div>
+              )}
+
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+              }
