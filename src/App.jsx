@@ -142,10 +142,10 @@ const allProducts = [
   { id: 'cnd5', name: 'CND5 - CJC 1295 NO DAC (5mg/vial*10 vials)', price: 74, category: 'CJC 1295 NO DAC' },
   { id: 'cnd10', name: 'CND10 - CJC 1295 NO DAC (10mg/vial*10 vials)', price: 132, category: 'CJC 1295 NO DAC' },
   
-  { id: 'bb10', name: 'BB10 - Blend: BPC157 5mg + TB500 5mg', price: 96, category: 'BB (BPC157 + TB500)' },
-  { id: 'bb20', name: 'BB20 - Blend: BPC157 10mg + TB500 10mg', price: 169, category: 'BB (BPC157 + TB500)' },
+  { id: 'bb10', name: 'BB10 - Blend: BPC157 5mg + TB500 5mg', price: 96, category: 'Wolverine (BPC157 + TB500)' },
+  { id: 'bb20', name: 'BB20 - Blend: BPC157 10mg + TB500 10mg', price: 169, category: 'Wolverine (BPC157 + TB500)' },
   { id: 'cp10', name: 'CP10 - Blend: CJC1295 NO DAC 5mg + Ipamorelin 5mg', price: 103, category: 'CP (CJC1295 NO DAC + Ipamorelin)' },
-  { id: 'bbg70', name: 'BBG70 - Blend: BPC 157 10mg + TB500 10mg + GHK-CU 50mg', price: 180, category: 'BBG (BPC157 + TB500 + GHK-CU)' },
+  { id: 'bbg70', name: 'BBG70 - Blend: BPC 157 10mg + TB500 10mg + GHK-CU 50mg', price: 180, category: 'GLOW (BPC157 + TB500 + GHK-CU)' },
   { id: 'klow80', name: 'KLOW80 - Blend: BPC 157 10mg + TB500 10mg + GHK-CU 50mg + KPV 10mg', price: 210, category: 'KLOW (BPC157 + TB500 + GHK-CU + KPV)', image: img_KLOW },
   { id: 'cs10', name: 'CS10 - Cagrilintide 5mg + Semaglutide 5mg', price: 162, category: 'CS (Cagrilintide + Semaglutide)' },
   
