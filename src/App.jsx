@@ -296,12 +296,19 @@ export default function App() {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedVariantId, setSelectedVariantId] = useState('');
   const [detailQuantity, setDetailQuantity] = useState(1);
-  const [address, setAddress] = useState(''); // NEU: State für die Lieferadresse
+  
+  // STRUKTURIERTES ADRESS-STATE
+  const [address, setAddress] = useState({
+    name: '',
+    street: '',
+    zip: '',
+    city: '',
+    country: ''
+  });
 
   const searchContainerRef = useRef(null);
   const categoriesList = [...new Set(allProducts.map(p => p.category))];
 
-  // Konstante für den pauschalen Versand
   const SHIPPING_COST = 60;
 
   useEffect(() => {
@@ -374,7 +381,6 @@ export default function App() {
     }).filter(Boolean));
   };
 
-  // Preisberechnung inkl. Versandkosten
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const finalTotal = subtotal > 0 ? subtotal + SHIPPING_COST : 0;
 
@@ -385,14 +391,18 @@ export default function App() {
       message += `${index + 1}. ${item.name} - Quantity: ${item.quantity} kit(s) - Price: $${item.price * item.quantity}\n`;
     });
     
-    // Füge die Aufschlüsselung der Kosten hinzu
     message += `\nSubtotal: $${subtotal}`;
     message += `\nShipping: $${SHIPPING_COST}`;
     message += `\n*Total Price: $${finalTotal}*\n`;
     
-    // Füge die Lieferadresse hinzu, falls vorhanden
-    if (address.trim() !== '') {
-      message += `\n*Shipping Address:*\n${address.trim()}`;
+    // Prüfen, ob irgendein Adressfeld ausgefüllt wurde
+    const hasAddress = address.name || address.street || address.zip || address.city || address.country;
+    if (hasAddress) {
+      message += `\n*Shipping Address:*\n`;
+      if (address.name) message += `${address.name}\n`;
+      if (address.street) message += `${address.street}\n`;
+      if (address.zip || address.city) message += `${address.zip} ${address.city}`.trim() + `\n`;
+      if (address.country) message += `${address.country}\n`;
     }
 
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
@@ -843,17 +853,50 @@ export default function App() {
                 {cart.length > 0 && (
                   <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex flex-col">
                     
-                    {/* NEU: ADRESSFELD */}
-                    <div className="mb-6 space-y-2">
+                    {/* STRUKTURIERTES ADRESSFELD */}
+                    <div className="mb-6 space-y-3">
                       <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                         Shipping Address <span className="font-normal lowercase tracking-normal">(Optional)</span>
                       </label>
-                      <textarea 
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        placeholder="Enter full delivery address..."
-                        className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-3 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm resize-none h-20"
-                      />
+                      <div className="space-y-2">
+                        <input 
+                          type="text" 
+                          placeholder="Full Name"
+                          value={address.name}
+                          onChange={(e) => setAddress({...address, name: e.target.value})}
+                          className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                        />
+                        <input 
+                          type="text" 
+                          placeholder="Street & House Number"
+                          value={address.street}
+                          onChange={(e) => setAddress({...address, street: e.target.value})}
+                          className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                        />
+                        <div className="flex gap-2">
+                          <input 
+                            type="text" 
+                            placeholder="ZIP Code"
+                            value={address.zip}
+                            onChange={(e) => setAddress({...address, zip: e.target.value})}
+                            className="w-1/3 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                          />
+                          <input 
+                            type="text" 
+                            placeholder="City"
+                            value={address.city}
+                            onChange={(e) => setAddress({...address, city: e.target.value})}
+                            className="w-2/3 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                          />
+                        </div>
+                        <input 
+                          type="text" 
+                          placeholder="Country"
+                          value={address.country}
+                          onChange={(e) => setAddress({...address, country: e.target.value})}
+                          className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                        />
+                      </div>
                     </div>
 
                     {/* PREISÜBERSICHT MIT VERSAND */}
