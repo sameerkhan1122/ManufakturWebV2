@@ -254,8 +254,8 @@ function ProductGroupCard({ groupName, products, onClick }) {
         )}
         <div className="absolute inset-0 bg-cyan-600/0 dark:bg-cyan-500/0 group-hover:bg-cyan-600/5 dark:group-hover:bg-cyan-500/5 transition-all duration-300"></div>
       </div>
-    
-            <div>
+      
+      <div>
         <h3 className="font-bold text-slate-900 dark:text-slate-200 text-lg uppercase tracking-wider leading-snug">{groupName}</h3>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{products.length} {products.length === 1 ? 'Variant' : 'Variants'} Available</p>
       </div>
@@ -296,11 +296,12 @@ export default function App() {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedVariantId, setSelectedVariantId] = useState('');
   const [detailQuantity, setDetailQuantity] = useState(1);
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(''); // NEU: State für die Lieferadresse
 
   const searchContainerRef = useRef(null);
   const categoriesList = [...new Set(allProducts.map(p => p.category))];
 
+  // Konstante für den pauschalen Versand
   const SHIPPING_COST = 60;
 
   useEffect(() => {
@@ -373,6 +374,7 @@ export default function App() {
     }).filter(Boolean));
   };
 
+  // Preisberechnung inkl. Versandkosten
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const finalTotal = subtotal > 0 ? subtotal + SHIPPING_COST : 0;
 
@@ -383,10 +385,12 @@ export default function App() {
       message += `${index + 1}. ${item.name} - Quantity: ${item.quantity} kit(s) - Price: $${item.price * item.quantity}\n`;
     });
     
+    // Füge die Aufschlüsselung der Kosten hinzu
     message += `\nSubtotal: $${subtotal}`;
     message += `\nShipping: $${SHIPPING_COST}`;
     message += `\n*Total Price: $${finalTotal}*\n`;
     
+    // Füge die Lieferadresse hinzu, falls vorhanden
     if (address.trim() !== '') {
       message += `\n*Shipping Address:*\n${address.trim()}`;
     }
@@ -532,7 +536,7 @@ export default function App() {
           {/* MOBILE SEARCH */}
           {mobileSearchOpen && (
             <div className="lg:hidden px-4 pb-4 pt-2 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 relative z-50">
-              <form onSubmit={handleSearchSubmit} className="w-full relative">
+              <form onSubmit={(e) => { e.preventDefault(); setActiveTab('searchResults'); setMobileSearchOpen(false); }} className="w-full relative">
                 <input 
                   type="text" 
                   placeholder="Search products..." 
@@ -601,287 +605,285 @@ export default function App() {
                         groupName={category}
                         products={catProducts}
                         onClick={handleGroupClick}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* SUCH-ERGEBNISSEITE */}
-        {activeTab === 'searchResults' && (
-          <div className="space-y-8">
-            <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200 dark:border-slate-800">
-              <div>
-                <h2 className="text-2xl font-black tracking-tight mb-1 uppercase">Search Results</h2>
-                <p className="text-slate-600 dark:text-slate-400 text-sm">Showing results for: <span className="font-bold text-slate-900 dark:text-white">"{searchQuery}"</span></p>
-              </div>
-              <button onClick={() => { setActiveTab('home'); setSearchQuery(''); }} className="text-sm font-bold text-cyan-600 dark:text-cyan-400 hover:underline">
-                Clear Search &times;
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {categoriesList.map(category => {
-                const matchesSearch = category.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                      allProducts.some(p => p.category === category && p.name.toLowerCase().includes(searchQuery.toLowerCase()));
-                
-                if (!matchesSearch) return null;
-
-                const catProducts = allProducts.filter(p => p.category === category);
-                return (
-                  <ProductGroupCard 
-                    key={category}
-                    groupName={category}
-                    products={catProducts}
-                    onClick={handleGroupClick}
-                  />
-                );
-              })}
-              
-              {!categoriesList.some(category => category.toLowerCase().includes(searchQuery.toLowerCase()) || allProducts.some(p => p.category === category && p.name.toLowerCase().includes(searchQuery.toLowerCase()))) && (
-                <div className="col-span-full text-center py-20 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm shadow-sm">
-                  <p className="text-slate-500 dark:text-slate-400 font-medium">No products found matching your search.</p>
+                      />
+                    );
+                  })}
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* PRODUKT DETAIL SEITE */}
-        {activeTab === 'productDetail' && selectedGroup && (() => {
-          const groupProducts = allProducts.filter(p => p.category === selectedGroup);
-          const currentProduct = groupProducts.find(p => p.id === selectedVariantId) || groupProducts[0];
-
-          return (
-            <div className="max-w-5xl mx-auto space-y-6">
-              <button onClick={() => setActiveTab(searchQuery ? 'searchResults' : 'home')} className="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 text-sm font-bold flex items-center gap-2 transition-colors uppercase tracking-wider">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                {searchQuery ? 'Back to Search' : 'Back to Catalog'}
-              </button>
-              
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm p-6 md:p-10 flex flex-col md:flex-row gap-10 shadow-md">
-                
-                <div className="w-full md:w-1/2 aspect-square bg-slate-50 dark:bg-slate-950 rounded-sm flex flex-col items-center justify-center border border-slate-200 dark:border-slate-800 relative overflow-hidden group">
-                  {currentProduct?.image ? (
-                    <img src={currentProduct.image} alt={currentProduct.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <>
-                      <svg className="w-16 h-16 text-slate-300 dark:text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                      <span className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest text-sm">No Image</span>
-                    </>
-                  )}
+          {/* SUCH-ERGEBNISSEITE */}
+          {activeTab === 'searchResults' && (
+            <div className="space-y-8">
+              <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200 dark:border-slate-800">
+                <div>
+                  <h2 className="text-2xl font-black tracking-tight mb-1 uppercase">Search Results</h2>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm">Showing results for: <span className="font-bold text-slate-900 dark:text-white">"{searchQuery}"</span></p>
                 </div>
-
-                <div className="w-full md:w-1/2 flex flex-col justify-center">
-                  <div className="mb-8">
-                    <div className="inline-block px-2.5 py-1 bg-slate-100 dark:bg-cyan-500/10 text-slate-600 dark:text-cyan-400 border border-slate-200 dark:border-transparent text-[10px] font-bold rounded-sm mb-4 uppercase tracking-widest">
-                      Professional Grade
-                    </div>
-                    <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4 uppercase leading-snug">{selectedGroup}</h1>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed font-medium">
-                      Select your preferred dosage or variant below. All kits undergo strict oversight to ensure consistent purity and correct dosing for professional requirements.
-                    </p>
-                  </div>
-
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Variant / Dosage</label>
-                      <div className="relative">
-                        <select 
-                          value={selectedVariantId}
-                          onChange={(e) => setSelectedVariantId(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-4 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 appearance-none shadow-sm font-medium"
-                        >
-                          {groupProducts.map(p => (
-                            <option key={p.id} value={p.id}>{p.name}</option>
-                          ))}
-                        </select>
-                        <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-500 dark:text-slate-400">
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
-                      <div className="flex items-end justify-between mb-6">
-                        <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Price per Kit</span>
-                        <span className="text-4xl font-black text-slate-900 dark:text-white">${currentProduct?.price}</span>
-                      </div>
-
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-1 shadow-sm h-[52px]">
-                          <button onClick={() => setDetailQuantity(Math.max(1, detailQuantity - 1))} className="w-10 h-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-200 dark:bg-slate-800 rounded-sm font-bold text-xl transition-colors">-</button>
-                          <span className="text-lg font-bold w-10 text-center text-slate-900 dark:text-white">{detailQuantity}</span>
-                          <button onClick={() => setDetailQuantity(detailQuantity + 1)} className="w-10 h-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-200 dark:bg-slate-800 rounded-sm font-bold text-xl transition-colors">+</button>
-                        </div>
-                        
-                        <button 
-                          onClick={() => {
-                            addToCart(currentProduct, detailQuantity);
-                            setDetailQuantity(1);
-                          }}
-                          className="flex-1 h-[52px] bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-950 font-extrabold text-sm uppercase tracking-widest rounded-sm transition-all shadow-sm flex items-center justify-center gap-2"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                          Add to Cart
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          );
-        })()}
-
-        {/* ABOUT US TAB */}
-        {activeTab === 'about' && (
-          <div className="max-w-4xl mx-auto space-y-12 py-6">
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white uppercase">About Us</h1>
-              <p className="text-slate-600 dark:text-slate-400 text-lg font-medium">Direct manufacturing standards, uncompromising quality, and global reach.</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm">
-              <div className="space-y-4">
-                <h3 className="text-xl font-black text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Our Heritage & Standards</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed font-medium">
-                  Originally established with high success across South American markets, Manufaktur brings elite direct peptide and HGH production standards straight to Europe. By cutting out middlemen and distributors, we guarantee direct-source pricing and strict quality assurance.
-                </p>
-                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed font-medium">
-                  Every kit undergoes strict oversight to ensure consistent purity and correct dosing for professional requirements.
-                </p>
-              </div>
-              <div className="flex justify-center">
-                <img src={logoJPEG} alt="Manufaktur Logo" className="rounded-sm border border-slate-200 dark:border-slate-700 shadow-sm max-h-64 object-cover w-full" />
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
-              <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Production & Facility Preview</h3>
-              <div className="w-full overflow-hidden rounded-sm border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-black flex justify-center">
-                <video src={productionVID} controls autoPlay muted loop className="max-h-[400px] w-full object-cover" />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* CONTACT TAB */}
-        {activeTab === 'contact' && (
-          <div className="max-w-xl mx-auto py-12 space-y-8">
-            <div className="text-center space-y-2">
-              <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white uppercase">Contact Us</h1>
-              <p className="text-slate-600 dark:text-slate-400 text-sm font-medium">Reach out to our team directly via WhatsApp for inquiries or support.</p>
-            </div>
-
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm text-center space-y-6">
-              <div className="w-16 h-16 bg-slate-100 dark:bg-cyan-500/10 border border-slate-200 dark:border-cyan-500/30 text-slate-800 dark:text-cyan-400 rounded-sm flex items-center justify-center mx-auto text-2xl shadow-sm">
-                💬
-              </div>
-              <div>
-                <h3 className="text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">WhatsApp Support</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Fast, reliable responses directly from our support desk.</p>
-              </div>
-              <a href="https://wa.me/4915200000000" target="_blank" rel="noopener noreferrer" className="inline-block w-full py-3.5 bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-900 font-extrabold uppercase tracking-widest rounded-sm transition-all shadow-sm">
-                Open WhatsApp Chat
-              </a>
-            </div>
-          </div>
-        )}
-
-      </main>
-
-      {/* CART SLIDE-OVER DRAWER */}
-      {isCartOpen && (
-        <div className="fixed inset-0 z-50 overflow-hidden">
-          <div className="absolute inset-0 bg-slate-900/50 dark:bg-black/70 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)}></div>
-          <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
-            <div className="w-screen max-w-md bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-2xl">
-              
-              <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <h2 className="text-lg font-black uppercase tracking-wider flex items-center gap-2 text-slate-900 dark:text-white">
-                  Shopping Cart <span className="text-xs bg-slate-100 dark:bg-cyan-500/10 text-slate-600 dark:text-cyan-400 border border-slate-200 dark:border-cyan-500/30 px-2 py-0.5 rounded-sm">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
-                </h2>
-                <button onClick={() => setIsCartOpen(false)} className="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1 transition-colors">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <button onClick={() => { setActiveTab('home'); setSearchQuery(''); }} className="text-sm font-bold text-cyan-600 dark:text-cyan-400 hover:underline">
+                  Clear Search &times;
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                {cart.length === 0 ? (
-                  <div className="text-center py-20 text-slate-400 dark:text-slate-500 space-y-3">
-                    <svg className="w-12 h-12 mx-auto opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    <p className="text-sm font-medium">Your cart is empty.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {categoriesList.map(category => {
+                  const matchesSearch = category.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                        allProducts.some(p => p.category === category && p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+                  
+                  if (!matchesSearch) return null;
+
+                  const catProducts = allProducts.filter(p => p.category === category);
+                  return (
+                    <ProductGroupCard 
+                      key={category}
+                      groupName={category}
+                      products={catProducts}
+                      onClick={handleGroupClick}
+                    />
+                  );
+                })}
+                
+                {!categoriesList.some(category => category.toLowerCase().includes(searchQuery.toLowerCase()) || allProducts.some(p => p.category === category && p.name.toLowerCase().includes(searchQuery.toLowerCase()))) && (
+                  <div className="col-span-full text-center py-20 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm shadow-sm">
+                    <p className="text-slate-500 dark:text-slate-400 font-medium">No products found matching your search.</p>
                   </div>
-                ) : (
-                  cart.map(item => (
-                    <div key={item.id} className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 rounded-sm flex flex-col gap-3 shadow-sm">
-                      <div className="flex justify-between items-start gap-2">
-                        <h4 className="font-bold text-sm text-slate-900 dark:text-slate-200 leading-snug">{item.name}</h4>
-                        <span className="font-black text-slate-900 dark:text-white">${item.price * item.quantity}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm p-1 shadow-sm">
-                          <button onClick={() => updateQuantity(item.id, -1)} className="w-6 h-6 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-sm font-bold transition-colors">-</button>
-                          <span className="text-xs font-bold px-2 text-slate-900 dark:text-white">{item.quantity}</span>
-                          <button onClick={() => updateQuantity(item.id, 1)} className="w-6 h-6 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-sm font-bold transition-colors">+</button>
-                        </div>
-                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">1 kit / qty</span>
-                      </div>
-                    </div>
-                  ))
                 )}
               </div>
+            </div>
+          )}
 
-              {cart.length > 0 && (
-                <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex flex-col">
+          {/* PRODUKT DETAIL SEITE */}
+          {activeTab === 'productDetail' && selectedGroup && (() => {
+            const groupProducts = allProducts.filter(p => p.category === selectedGroup);
+            const currentProduct = groupProducts.find(p => p.id === selectedVariantId) || groupProducts[0];
+
+            return (
+              <div className="max-w-5xl mx-auto space-y-6">
+                <button onClick={() => setActiveTab(searchQuery ? 'searchResults' : 'home')} className="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 text-sm font-bold flex items-center gap-2 transition-colors uppercase tracking-wider">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                  {searchQuery ? 'Back to Search' : 'Back to Catalog'}
+                </button>
+                
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm p-6 md:p-10 flex flex-col md:flex-row gap-10 shadow-md">
                   
-                  {/* ADRESSFELD */}
-                  <div className="mb-6 space-y-2">
-                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Shipping Address <span className="font-normal lowercase tracking-normal">(Optional)</span>
-                    </label>
-                    <textarea 
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      placeholder="Enter full delivery address..."
-                      className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-3 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm resize-none h-20"
-                    />
+                  <div className="w-full md:w-1/2 aspect-square bg-slate-50 dark:bg-slate-950 rounded-sm flex flex-col items-center justify-center border border-slate-200 dark:border-slate-800 relative overflow-hidden group">
+                    {currentProduct?.image ? (
+                      <img src={currentProduct.image} alt={currentProduct.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <>
+                        <svg className="w-16 h-16 text-slate-300 dark:text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest text-sm">No Image</span>
+                      </>
+                    )}
                   </div>
 
-                  {/* PREISÜBERSICHT MIT VERSAND */}
-                  <div className="space-y-3 mb-6">
-                    <div className="flex justify-between items-center text-sm font-bold text-slate-600 dark:text-slate-400">
-                      <span>Subtotal:</span>
-                      <span>${subtotal}</span>
+                  <div className="w-full md:w-1/2 flex flex-col justify-center">
+                    <div className="mb-8">
+                      <div className="inline-block px-2.5 py-1 bg-slate-100 dark:bg-cyan-500/10 text-slate-600 dark:text-cyan-400 border border-slate-200 dark:border-transparent text-[10px] font-bold rounded-sm mb-4 uppercase tracking-widest">
+                        Professional Grade
+                      </div>
+                      <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4 uppercase leading-snug">{selectedGroup}</h1>
+                      <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed font-medium">
+                        Select your preferred dosage or variant below. All kits undergo strict oversight to ensure consistent purity and correct dosing for professional requirements.
+                      </p>
                     </div>
-                    <div className="flex justify-between items-center text-sm font-bold text-slate-600 dark:text-slate-400 pb-3 border-b border-slate-200 dark:border-slate-800">
-                      <span>Global Shipping:</span>
-                      <span>${SHIPPING_COST}</span>
-                    </div>
-                    <div className="flex justify-between items-center text-base font-black uppercase tracking-wider text-slate-900 dark:text-white">
-                      <span>Total:</span>
-                      <span className="text-2xl text-cyan-600 dark:text-cyan-400">${finalTotal}</span>
+
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Variant / Dosage</label>
+                        <div className="relative">
+                          <select 
+                            value={selectedVariantId}
+                            onChange={(e) => setSelectedVariantId(e.target.value)}
+                            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-4 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 appearance-none shadow-sm font-medium"
+                          >
+                            {groupProducts.map(p => (
+                              <option key={p.id} value={p.id}>{p.name}</option>
+                            ))}
+                          </select>
+                          <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-500 dark:text-slate-400">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
+                        <div className="flex items-end justify-between mb-6">
+                          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Price per Kit</span>
+                          <span className="text-4xl font-black text-slate-900 dark:text-white">${currentProduct?.price}</span>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-1 shadow-sm h-[52px]">
+                            <button onClick={() => setDetailQuantity(Math.max(1, detailQuantity - 1))} className="w-10 h-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-200 dark:bg-slate-800 rounded-sm font-bold text-xl transition-colors">-</button>
+                            <span className="text-lg font-bold w-10 text-center text-slate-900 dark:text-white">{detailQuantity}</span>
+                            <button onClick={() => setDetailQuantity(detailQuantity + 1)} className="w-10 h-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-200 dark:bg-slate-800 rounded-sm font-bold text-xl transition-colors">+</button>
+                          </div>
+                          
+                          <button 
+                            onClick={() => {
+                              addToCart(currentProduct, detailQuantity);
+                              setDetailQuantity(1);
+                            }}
+                            className="flex-1 h-[52px] bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-950 font-extrabold text-sm uppercase tracking-widest rounded-sm transition-all shadow-sm flex items-center justify-center gap-2"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            Add to Cart
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <button onClick={handleWhatsAppCheckout} className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-extrabold uppercase tracking-widest rounded-sm transition-all shadow-sm flex items-center justify-center gap-2">
-                    <span>Checkout (WhatsApp)</span>
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* ABOUT US TAB */}
+          {activeTab === 'about' && (
+            <div className="max-w-4xl mx-auto space-y-12 py-6">
+              <div className="text-center space-y-4">
+                <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white uppercase">About Us</h1>
+                <p className="text-slate-600 dark:text-slate-400 text-lg font-medium">Direct manufacturing standards, uncompromising quality, and global reach.</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm">
+                <div className="space-y-4">
+                  <h3 className="text-xl font-black text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Our Heritage & Standards</h3>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed font-medium">
+                    Originally established with high success across South American markets, Manufaktur brings elite direct peptide and HGH production standards straight to Europe. By cutting out middlemen and distributors, we guarantee direct-source pricing and strict quality assurance.
+                  </p>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed font-medium">
+                    Every kit undergoes strict oversight to ensure consistent purity and correct dosing for professional requirements.
+                  </p>
+                </div>
+                <div className="flex justify-center">
+                  <img src={logoJPEG} alt="Manufaktur Logo" className="rounded-sm border border-slate-200 dark:border-slate-700 shadow-sm max-h-64 object-cover w-full" />
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
+                <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Production & Facility Preview</h3>
+                <div className="w-full overflow-hidden rounded-sm border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-black flex justify-center">
+                  <video src={productionVID} controls autoPlay muted loop className="max-h-[400px] w-full object-cover" />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* CONTACT TAB */}
+          {activeTab === 'contact' && (
+            <div className="max-w-xl mx-auto py-12 space-y-8">
+              <div className="text-center space-y-2">
+                <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white uppercase">Contact Us</h1>
+                <p className="text-slate-600 dark:text-slate-400 text-sm font-medium">Reach out to our team directly via WhatsApp for inquiries or support.</p>
+              </div>
+
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm text-center space-y-6">
+                <div className="w-16 h-16 bg-slate-100 dark:bg-cyan-500/10 border border-slate-200 dark:border-cyan-500/30 text-slate-800 dark:text-cyan-400 rounded-sm flex items-center justify-center mx-auto text-2xl shadow-sm">
+                  💬
+                </div>
+                <div>
+                  <h3 className="text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">WhatsApp Support</h3>
+                  <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Fast, reliable responses directly from our support desk.</p>
+                </div>
+                <a href="https://wa.me/4915200000000" target="_blank" rel="noopener noreferrer" className="inline-block w-full py-3.5 bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-900 font-extrabold uppercase tracking-widest rounded-sm transition-all shadow-sm">
+                  Open WhatsApp Chat
+                </a>
+              </div>
+            </div>
+          )}
+
+        </main>
+
+        {/* CART SLIDE-OVER DRAWER */}
+        {isCartOpen && (
+          <div className="fixed inset-0 z-50 overflow-hidden">
+            <div className="absolute inset-0 bg-slate-900/50 dark:bg-black/70 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)}></div>
+            <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
+              <div className="w-screen max-w-md bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-2xl">
+                
+                <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                  <h2 className="text-lg font-black uppercase tracking-wider flex items-center gap-2 text-slate-900 dark:text-white">
+                    Shopping Cart <span className="text-xs bg-slate-100 dark:bg-cyan-500/10 text-slate-600 dark:text-cyan-400 border border-slate-200 dark:border-cyan-500/30 px-2 py-0.5 rounded-sm">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
+                  </h2>
+                  <button onClick={() => setIsCartOpen(false)} className="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1 transition-colors">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                   </button>
                 </div>
-              )}
 
+                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                  {cart.length === 0 ? (
+                    <div className="text-center py-20 text-slate-400 dark:text-slate-500 space-y-3">
+                      <svg className="w-12 h-12 mx-auto opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                      <p className="text-sm font-medium">Your cart is empty.</p>
+                    </div>
+                  ) : (
+                    cart.map(item => (
+                      <div key={item.id} className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 rounded-sm flex flex-col gap-3 shadow-sm">
+                        <div className="flex justify-between items-start gap-2">
+                          <h4 className="font-bold text-sm text-slate-900 dark:text-slate-200 leading-snug">{item.name}</h4>
+                          <span className="font-black text-slate-900 dark:text-white">${item.price * item.quantity}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm p-1 shadow-sm">
+                            <button onClick={() => updateQuantity(item.id, -1)} className="w-6 h-6 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-sm font-bold transition-colors">-</button>
+                            <span className="text-xs font-bold px-2 text-slate-900 dark:text-white">{item.quantity}</span>
+                            <button onClick={() => updateQuantity(item.id, 1)} className="w-6 h-6 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-sm font-bold transition-colors">+</button>
+                          </div>
+                          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">1 kit / qty</span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {cart.length > 0 && (
+                  <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex flex-col">
+                    
+                    {/* NEU: ADRESSFELD */}
+                    <div className="mb-6 space-y-2">
+                      <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                        Shipping Address <span className="font-normal lowercase tracking-normal">(Optional)</span>
+                      </label>
+                      <textarea 
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        placeholder="Enter full delivery address..."
+                        className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-3 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm resize-none h-20"
+                      />
+                    </div>
+
+                    {/* PREISÜBERSICHT MIT VERSAND */}
+                    <div className="space-y-3 mb-6">
+                      <div className="flex justify-between items-center text-sm font-bold text-slate-600 dark:text-slate-400">
+                        <span>Subtotal:</span>
+                        <span>${subtotal}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm font-bold text-slate-600 dark:text-slate-400 pb-3 border-b border-slate-200 dark:border-slate-800">
+                        <span>Global Shipping:</span>
+                        <span>${SHIPPING_COST}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-base font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                        <span>Total:</span>
+                        <span className="text-2xl text-cyan-600 dark:text-cyan-400">${finalTotal}</span>
+                      </div>
+                    </div>
+
+                    <button onClick={handleWhatsAppCheckout} className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-extrabold uppercase tracking-widest rounded-sm transition-all shadow-sm flex items-center justify-center gap-2">
+                      <span>Checkout (WhatsApp)</span>
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                    </button>
+                  </div>
+                )}
+
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
-
-      
-    
