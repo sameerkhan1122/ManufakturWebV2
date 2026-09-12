@@ -2,41 +2,56 @@ import React, { useState, useEffect, useRef } from 'react';
 import logoJPEG from './assets/logo.jpeg';
 import productionVID from './assets/production.mp4';
 
-// --- BILD-IMPORTE ---
-import img_TR_RT from './assets/Tirzepatide_Retatrutide.jpeg';
-import img_TR_10_RT_40 from './assets/TR_10_RT_40.jpeg';
-import img_TR_30 from './assets/TR_30.jpeg';
-import img_TR_60 from './assets/TR_60.jpeg';
-import img_TR_100 from './assets/TR_100.jpeg';
-
+// --- ASSET IMPORTE ---
+import img_AA_3 from './assets/AA_3.jpeg';
+import img_AM10 from './assets/AM10.jpeg';
+import img_AM50 from './assets/AM50.jpeg';
+import img_BAC_3 from './assets/BAC_3.jpeg';
+import img_BAC_10 from './assets/BAC_10.jpeg';
+import img_BBG70 from './assets/BBG70.jpeg';
+import img_BC_10 from './assets/BC_10.jpeg';
+import img_BM_20 from './assets/BM_20.jpeg';
+import img_CLU_50 from './assets/CLU_50.jpeg';
+import img_CP10 from './assets/CP10.jpeg';
+import img_Epitalon10mg from './assets/Epitalon10mg.jpeg';
+import img_ET_10 from './assets/ET_10.jpeg';
+import img_GTT_1500 from './assets/GTT_1500.jpeg';
+import img_H_multi from './assets/H_10_H_12_H_24_H_36.jpeg';
+import img_H_24 from './assets/H_24.jpeg';
+import img_KLOW_10 from './assets/KLOW_10.jpeg';
+import img_KLOW80 from './assets/KLOW80.jpeg';
+import img_Lemon_Bottle from './assets/Lemon_Bottle.jpeg';
+import img_MS_5 from './assets/MS_5.jpeg';
+import img_MS5 from './assets/MS5.jpeg';
+import img_MS_10 from './assets/MS_10.jpeg';
+import img_MS10 from './assets/MS10.jpeg';
+import img_NV_500 from './assets/NV_500.jpeg';
 import img_Retatrutide from './assets/Retatrutide.jpeg';
 import img_RT_10 from './assets/RT_10.jpeg';
 import img_RT_20 from './assets/RT_20.jpeg';
 import img_RT_30 from './assets/RT_30.jpeg';
 import img_RT_60 from './assets/RT_60.jpeg';
-
+import img_RT10_RT20 from './assets/RT10_RT20.jpeg';
 import img_SL332 from './assets/SL332_5_SL332_10.jpeg';
-import img_BAC_multi from './assets/BAC_10_BAC_3.jpeg';
-import img_BC_10 from './assets/BC_10.jpeg';
-import img_ET_10 from './assets/ET_10.jpeg';
-import img_GTT_1500 from './assets/GTT_1500.jpeg';
-import img_H_multi from './assets/H_10_H_12_H_24_H_36.jpeg';
-import img_KLOW from './assets/KLOW_10.jpeg';
-import img_Lemon from './assets/Lemon_Bottle.jpeg';
-import img_MS_5 from './assets/MS_5.jpeg';
-import img_MS_10 from './assets/MS_10.jpeg';
-import img_CLU_50 from './assets/CLU_50.jpeg';
-import img_NV_500 from './assets/NV_500.jpeg';
+import img_TB500_20mg from './assets/TB500_20mg.jpeg';
+import img_Tesamorelin10mg from './assets/Tesamorelin10mg.jpeg';
+import img_TR_RT from './assets/Tirzepatide_Retatrutide.jpeg';
+import img_TR_10 from './assets/TR_10.jpeg';
+import img_TR_10_RT_40 from './assets/TR_10_RT_40.jpeg';
+import img_TR_30 from './assets/TR_30.jpeg';
+import img_TR_60 from './assets/TR_60.jpeg';
+import img_TR_100 from './assets/TR_100.jpeg';
+import img_TR120 from './assets/TR120.jpeg';
 
 const allProducts = [
   { id: 'tr2', name: 'TR2 - Tirzepatide (2mg/vial*10 vials)', price: 29, category: 'Tirzepatide', image: img_TR_RT },
   { id: 'tr5', name: 'TR5 - Tirzepatide (5mg/vial*10 vials)', price: 29, category: 'Tirzepatide', image: img_TR_RT },
-  { id: 'tr10', name: 'TR10 - Tirzepatide (10mg/vial*10 vials)', price: 40, category: 'Tirzepatide', image: img_TR_10_RT_40 },
+  { id: 'tr10', name: 'TR10 - Tirzepatide (10mg/vial*10 vials)', price: 40, category: 'Tirzepatide', image: img_TR_10 },
   { id: 'tr15', name: 'TR15 - Tirzepatide (15mg/vial*10 vials)', price: 55, category: 'Tirzepatide', image: img_TR_RT },
   { id: 'tr20', name: 'TR20 - Tirzepatide (20mg/vial*10 vials)', price: 66, category: 'Tirzepatide', image: img_TR_RT },
   { id: 'tr25', name: 'TR25 - Tirzepatide (25mg/vial*10 vials)', price: 73, category: 'Tirzepatide', image: img_TR_RT },
   { id: 'tr30', name: 'TR30 - Tirzepatide (30mg/vial*10 vials)', price: 80, category: 'Tirzepatide', image: img_TR_30 },
-  { id: 'tr40', name: 'TR40 - Tirzepatide (40mg/vial*10 vials)', price: 117, category: 'Tirzepatide', image: img_TR_RT },
+  { id: 'tr40', name: 'TR40 - Tirzepatide (40mg/vial*10 vials)', price: 117, category: 'Tirzepatide', image: img_TR_10_RT_40 },
   { id: 'tr50', name: 'TR50 - Tirzepatide (50mg/vial*10 vials)', price: 128, category: 'Tirzepatide', image: img_TR_RT },
   { id: 'tr60', name: 'TR60 - Tirzepatide (60mg/vial*10 vials)', price: 139, category: 'Tirzepatide', image: img_TR_60 },
   { id: 'tr70', name: 'TR70 - Tirzepatide (70mg/vial*10 vials)', price: 150, category: 'Tirzepatide', image: img_TR_RT },
@@ -44,7 +59,7 @@ const allProducts = [
   { id: 'tr90', name: 'TR90 - Tirzepatide (90mg/vial*10 vials)', price: 172, category: 'Tirzepatide', image: img_TR_RT },
   { id: 'tr100', name: 'TR100 - Tirzepatide (100mg/vial*10 vials)', price: 183, category: 'Tirzepatide', image: img_TR_100 },
   { id: 'tr110', name: 'TR110 - Tirzepatide (110mg/vial*10 vials)', price: 194, category: 'Tirzepatide', image: img_TR_RT },
-  { id: 'tr120', name: 'TR120 - Tirzepatide (120mg/vial*10 vials)', price: 216, category: 'Tirzepatide', image: img_TR_RT },
+  { id: 'tr120', name: 'TR120 - Tirzepatide (120mg/vial*10 vials)', price: 216, category: 'Tirzepatide', image: img_TR120 },
   { id: 'trk2', name: 'TRK2 - Tirzepatide (cartridge without pen) (2.5mg/cartridge*10 cartridges)', price: 183, category: 'Tirzepatide', image: img_TR_RT },
   { id: 'trk5', name: 'TRK5 - Tirzepatide (cartridge without pen) (5mg/cartridge*10 cartridges)', price: 232, category: 'Tirzepatide', image: img_TR_RT },
   { id: 'trk10', name: 'TRK10 - Tirzepatide (cartridge without pen) (10mg/cartridge*10 cartridges)', price: 309, category: 'Tirzepatide', image: img_TR_RT },
@@ -72,7 +87,7 @@ const allProducts = [
   { id: 'smk5', name: 'SMK5 - Semaglutide (cartridge without pen) (5mg/cartridge*10 cartridges)', price: 204, category: 'Semaglutide' },
 
   { id: 'cu50', name: 'CU50 - GHK-CU (50mg/vial*10 vials)', price: 18, category: 'GHK-CU', image: img_CLU_50 },
-  { id: 'cu100', name: 'CU100 - GHK-CU (100mg/vial*10 vials)', price: 25, category: 'GHK-CU' },
+  { id: 'cu100', name: 'CU100 - GHK-CU (100mg/vial*10 vials)', price: 25, category: 'GHK-CU', image: img_CLU_50 },
   
   { id: 'slu332-5', name: '332 - SLU-PP-332 (5mg/vial*10 vials)', price: 36, category: 'SLU-PP-332', image: img_SL332 },
   { id: 'slu332-10', name: '332 - SLU-PP-332 (10mg/vial*10 vials)', price: 44, category: 'SLU-PP-332', image: img_SL332 },
@@ -85,18 +100,18 @@ const allProducts = [
   
   { id: 'tsm2', name: 'TSM2 - Tesamorelin (2mg/vial*10 vials)', price: 39, category: 'Tesamorelin' },
   { id: 'tsm5', name: 'TSM5 - Tesamorelin (5mg/vial*10 vials)', price: 70, category: 'Tesamorelin' },
-  { id: 'tsm10', name: 'TSM10 - Tesamorelin (10mg/vial*10 vials)', price: 132, category: 'Tesamorelin' },
+  { id: 'tsm10', name: 'TSM10 - Tesamorelin (10mg/vial*10 vials)', price: 132, category: 'Tesamorelin', image: img_Tesamorelin10mg },
   { id: 'tsm20', name: 'TSM20 - Tesamorelin (20mg/vial*10 vials)', price: 250, category: 'Tesamorelin' },
   
-  { id: 'ms5', name: 'MS5 - MOTS-C (5mg/vial*10 vials)', price: 42, category: 'MOTS-C', image: img_MS_5 },
-  { id: 'ms10', name: 'MS10 - MOTS-C (10mg/vial*10 vials)', price: 69, category: 'MOTS-C', image: img_MS_10 },
-  { id: 'ms20', name: 'MS20 - MOTS-C (20mg/vial*10 vials)', price: 125, category: 'MOTS-C' },
-  { id: 'ms30', name: 'MS30 - MOTS-C (30mg/vial*10 vials)', price: 165, category: 'MOTS-C' },
-  { id: 'ms40', name: 'MS40 - MOTS-C (40mg/vial*10 vials)', price: 235, category: 'MOTS-C' },
+  { id: 'ms5', name: 'MS5 - MOTS-C (5mg/vial*10 vials)', price: 42, category: 'MOTS-C', image: img_MS5 },
+  { id: 'ms10', name: 'MS10 - MOTS-C (10mg/vial*10 vials)', price: 69, category: 'MOTS-C', image: img_MS10 },
+  { id: 'ms20', name: 'MS20 - MOTS-C (20mg/vial*10 vials)', price: 125, category: 'MOTS-C', image: img_MS_10 },
+  { id: 'ms30', name: 'MS30 - MOTS-C (30mg/vial*10 vials)', price: 165, category: 'MOTS-C', image: img_MS_10 },
+  { id: 'ms40', name: 'MS40 - MOTS-C (40mg/vial*10 vials)', price: 235, category: 'MOTS-C', image: img_MS_10 },
   
-  { id: '2ad', name: '2AD - AOD 9604 (2mg/vial*10 vials)', price: 66, category: 'AOD 9604' },
-  { id: '5ad', name: '5AD - AOD 9604 (5mg/vial*10 vials)', price: 66, category: 'AOD 9604' },
-  { id: '10ad', name: '10AD - AOD 9604 (10mg/vial*10 vials)', price: 118, category: 'AOD 9604' },
+  { id: '2ad', name: '2AD - AOD 9604 (2mg/vial*10 vials)', price: 66, category: 'AOD 9604', image: img_AA_3 },
+  { id: '5ad', name: '5AD - AOD 9604 (5mg/vial*10 vials)', price: 66, category: 'AOD 9604', image: img_AA_3 },
+  { id: '10ad', name: '10AD - AOD 9604 (10mg/vial*10 vials)', price: 118, category: 'AOD 9604', image: img_AA_3 },
   
   { id: 'g22', name: 'G22 - GHRP-2 (2mg/vial*10 vials)', price: 21, category: 'GHRP-2' },
   { id: 'g25', name: 'G25 - GHRP-2 (5mg/vial*10 vials)', price: 26, category: 'GHRP-2' },
@@ -115,7 +130,7 @@ const allProducts = [
   { id: 'h10', name: 'H10 - HGH 191 AA 97% (10iu/vial*10 vials)', price: 46, category: 'HGH', image: img_H_multi },
   { id: 'h12', name: 'H12 - HGH 191 AA 97% (12iu/vial*10vials)', price: 62, category: 'HGH', image: img_H_multi },
   { id: 'h15', name: 'H15 - HGH 191 AA 97% (15iu/vial*10vials)', price: 78, category: 'HGH' },
-  { id: 'h24', name: 'H24 - HGH 191 AA 97% (24iu/vial*10vials)', price: 118, category: 'HGH', image: img_H_multi },
+  { id: 'h24', name: 'H24 - HGH 191 AA 97% (24iu/vial*10vials)', price: 118, category: 'HGH', image: img_H_24 },
   
   { id: 'hc1000', name: 'HC1000 - HCG (1000iu/vial*10 vials)', price: 40, category: 'HCG' },
   { id: 'hc2000', name: 'HC2000 - HCG (2000iu/vial*10 vials)', price: 66, category: 'HCG' },
@@ -130,7 +145,7 @@ const allProducts = [
   
   { id: 'bt2', name: 'BT2 - TB 500 (Thymosin B4 AceTate) (2mg/vial*10 vials)', price: 35, category: 'TB 500' },
   { id: 'bt5', name: 'BT5 - TB 500 (Thymosin B4 AceTate) (5mg/vial*10 vials)', price: 66, category: 'TB 500' },
-  { id: 'bt10', name: 'BT10 - TB 500 (Thymosin B4 AceTate) (10mg/vial*10 vials)', price: 118, category: 'TB 500' },
+  { id: 'bt10', name: 'BT10 - TB 500 (Thymosin B4 AceTate) (10mg/vial*10 vials)', price: 118, category: 'TB 500', image: img_TB500_20mg },
   
   { id: 'cd2', name: 'CD2 - CJC 1295 DAC (2mg/vial*10 vials)', price: 37, category: 'CJC 1295 DAC' },
   { id: 'cd5', name: 'CD5 - CJC 1295 DAC (5mg/vial*10 vials)', price: 74, category: 'CJC 1295 DAC' },
@@ -140,11 +155,11 @@ const allProducts = [
   { id: 'cnd5', name: 'CND5 - CJC 1295 NO DAC (5mg/vial*10 vials)', price: 74, category: 'CJC 1295 NO DAC' },
   { id: 'cnd10', name: 'CND10 - CJC 1295 NO DAC (10mg/vial*10 vials)', price: 132, category: 'CJC 1295 NO DAC' },
   
-  { id: 'bb10', name: 'BB10 - Blend: BPC157 5mg + TB500 5mg', price: 96, category: 'BB (BPC157 + TB500)' },
-  { id: 'bb20', name: 'BB20 - Blend: BPC157 10mg + TB500 10mg', price: 169, category: 'BB (BPC157 + TB500)' },
-  { id: 'cp10', name: 'CP10 - Blend: CJC1295 NO DAC 5mg + Ipamorelin 5mg', price: 103, category: 'CP (CJC1295 NO DAC + Ipamorelin)' },
-  { id: 'bbg70', name: 'BBG70 - Blend: BPC 157 10mg + TB500 10mg + GHK-CU 50mg', price: 180, category: 'BBG (BPC157 + TB500 + GHK-CU)' },
-  { id: 'klow80', name: 'KLOW80 - Blend: BPC 157 10mg + TB500 10mg + GHK-CU 50mg + KPV 10mg', price: 210, category: 'KLOW (BPC157 + TB500 + GHK-CU + KPV)', image: img_KLOW },
+  { id: 'bb10', name: 'BB10 - Blend: BPC157 5mg + TB500 5mg', price: 96, category: 'BB (BPC157 + TB500)', image: img_BM_20 },
+  { id: 'bb20', name: 'BB20 - Blend: BPC157 10mg + TB500 10mg', price: 169, category: 'BB (BPC157 + TB500)', image: img_BM_20 },
+  { id: 'cp10', name: 'CP10 - Blend: CJC1295 NO DAC 5mg + Ipamorelin 5mg', price: 103, category: 'CP (CJC1295 NO DAC + Ipamorelin)', image: img_CP10 },
+  { id: 'bbg70', name: 'BBG70 - Blend: BPC 157 10mg + TB500 10mg + GHK-CU 50mg', price: 180, category: 'BBG (BPC157 + TB500 + GHK-CU)', image: img_BBG70 },
+  { id: 'klow80', name: 'KLOW80 - Blend: BPC 157 10mg + TB500 10mg + GHK-CU 50mg + KPV 10mg', price: 210, category: 'KLOW (BPC157 + TB500 + GHK-CU + KPV)', image: img_KLOW80 },
   { id: 'cs10', name: 'CS10 - Cagrilintide 5mg + Semaglutide 5mg', price: 162, category: 'CS (Cagrilintide + Semaglutide)' },
   
   { id: 'sk2', name: 'SK2 - Selank (2mg/vial*10 vials)', price: 22, category: 'Selank' },
@@ -152,8 +167,8 @@ const allProducts = [
   { id: 'sk10', name: 'SK10 - Selank (10mg/vial*10 vials)', price: 51, category: 'Selank' },
   
   { id: 'et10', name: 'ET10 - Epithalon (10mg/vial*10 vials)', price: 35, category: 'Epithalon', image: img_ET_10 },
-  { id: 'et50', name: 'ET50 - Epithalon (50mg/vial*10 vials)', price: 118, category: 'Epithalon' },
-  { id: 'et100', name: 'ET100 - Epithalon (100mg/vial*10 vials)', price: 257, category: 'Epithalon' },
+  { id: 'et50', name: 'ET50 - Epithalon (50mg/vial*10 vials)', price: 118, category: 'Epithalon', image: img_Epitalon10mg },
+  { id: 'et100', name: 'ET100 - Epithalon (100mg/vial*10 vials)', price: 257, category: 'Epithalon', image: img_Epitalon10mg },
   
   { id: 'p41', name: 'P41 - PT 141 (10mg/vial*10 vials)', price: 66, category: 'PT 141' },
   
@@ -212,8 +227,8 @@ const allProducts = [
   
   { id: 'fr5', name: 'FR5 - HGH Fragment 176-191 (5mg/vial*10 vials)', price: 80, category: 'HGH Fragment' },
   
-  { id: '5am', name: '5AM - 5-amino-1mq (5mg/vial*10 vials)', price: 45, category: '5-amino-1mq' },
-  { id: '50am', name: '50AM - 5-amino-1mq (50mg/vial*10 vials)', price: 92, category: '5-amino-1mq' },
+  { id: '5am', name: '5AM - 5-amino-1mq (5mg/vial*10 vials)', price: 45, category: '5-amino-1mq', image: img_AM10 },
+  { id: '50am', name: '50AM - 5-amino-1mq (50mg/vial*10 vials)', price: 92, category: '5-amino-1mq', image: img_AM50 },
   
   { id: 'fm2', name: 'FM2 - MGF (2mg/vial*10 vials)', price: 36, category: 'MGF' },
   { id: 'fmp2', name: 'FMP2 - PEG-MGF (2mg/vial*10 vials)', price: 78, category: 'PEG-MGF' },
@@ -223,9 +238,9 @@ const allProducts = [
   { id: 'fols344-1', name: 'Follistatin 344 95% (1mg/vial*10 vials)', price: 318, category: 'Follistatin' },
   { id: 'fols344-2', name: 'Follistatin 344 95% (2mg/vial*10 vials)', price: 593, category: 'Follistatin' },
   
-  { id: 'ba3', name: 'BA3 - BAC Water (3ml)', price: 7, category: 'BAC Water', image: img_BAC_multi },
-  { id: 'ba10', name: 'BA10 - BAC Water (10ml)', price: 11, category: 'BAC Water', image: img_BAC_multi },
-  { id: 'lemon', name: 'Lemon bottle (10mg/vial*10 vials)', price: 55, category: 'Lemon Bottle', image: img_Lemon },
+  { id: 'ba3', name: 'BA3 - BAC Water (3ml)', price: 7, category: 'BAC Water', image: img_BAC_3 },
+  { id: 'ba10', name: 'BA10 - BAC Water (10ml)', price: 11, category: 'BAC Water', image: img_BAC_10 },
+  { id: 'lemon', name: 'Lemon bottle (10mg/vial*10 vials)', price: 55, category: 'Lemon Bottle', image: img_Lemon_Bottle },
   { id: 'redlip', name: 'Red lip balm (10mg/vial*10 vials)', price: 55, category: 'Red Lip Balm' },
   { id: 'botox200', name: 'Botox (200u/vial*10 vials)', price: 110, category: 'Botox' },
   { id: 'botox150', name: 'Botox (150u/vial*10 vials)', price: 103, category: 'Botox' },
@@ -297,7 +312,6 @@ export default function App() {
   const [selectedVariantId, setSelectedVariantId] = useState('');
   const [detailQuantity, setDetailQuantity] = useState(1);
   
-  // STRUKTURIERTES ADRESS-STATE
   const [address, setAddress] = useState({
     name: '',
     street: '',
@@ -385,7 +399,7 @@ export default function App() {
   const finalTotal = subtotal > 0 ? subtotal + SHIPPING_COST : 0;
 
   const handleWhatsAppCheckout = () => {
-    const phone = "4915200000000";
+    const phone = "85244217796";
     let message = "Hello, I would like to purchase the following products:\n\n";
     cart.forEach((item, index) => {
       message += `${index + 1}. ${item.name} - Quantity: ${item.quantity} kit(s) - Price: $${item.price * item.quantity}\n`;
@@ -395,7 +409,6 @@ export default function App() {
     message += `\nShipping: $${SHIPPING_COST}`;
     message += `\n*Total Price: $${finalTotal}*\n`;
     
-    // Prüfen, ob irgendein Adressfeld ausgefüllt wurde
     const hasAddress = address.name || address.street || address.zip || address.city || address.country;
     if (hasAddress) {
       message += `\n*Shipping Address:*\n`;
@@ -505,12 +518,10 @@ export default function App() {
 
             {/* ACTION ICONS */}
             <div className="flex items-center justify-end gap-2 sm:gap-3 shrink-0">
-              
               <button onClick={() => setMobileSearchOpen(!mobileSearchOpen)} className="lg:hidden p-2 text-slate-500 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
               </button>
 
-              {/* DARK MODE TOGGLE SCHALTER */}
               <div className="hidden sm:flex items-center gap-2 mr-2">
                 <span onClick={() => setIsDarkMode(!isDarkMode)} className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest cursor-pointer select-none">
                   Dark Mode
@@ -543,7 +554,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* MOBILE SEARCH */}
           {mobileSearchOpen && (
             <div className="lg:hidden px-4 pb-4 pt-2 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 relative z-50">
               <form onSubmit={(e) => { e.preventDefault(); setActiveTab('searchResults'); setMobileSearchOpen(false); }} className="w-full relative">
@@ -586,8 +596,6 @@ export default function App() {
 
         {/* MAIN CONTENT AREA */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          
-          {/* HOME / STARTSEITE */}
           {activeTab === 'home' && (
             <div className="space-y-16">
               {!searchQuery && (
@@ -676,7 +684,6 @@ export default function App() {
                 </button>
                 
                 <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm p-6 md:p-10 flex flex-col md:flex-row gap-10 shadow-md">
-                  
                   <div className="w-full md:w-1/2 aspect-square bg-slate-50 dark:bg-slate-950 rounded-sm flex flex-col items-center justify-center border border-slate-200 dark:border-slate-800 relative overflow-hidden group">
                     {currentProduct?.image ? (
                       <img src={currentProduct.image} alt={currentProduct.name} className="w-full h-full object-cover" />
@@ -799,7 +806,7 @@ export default function App() {
                   <h3 className="text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">WhatsApp Support</h3>
                   <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Fast, reliable responses directly from our support desk.</p>
                 </div>
-                <a href="https://wa.me/4915200000000" target="_blank" rel="noopener noreferrer" className="inline-block w-full py-3.5 bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-900 font-extrabold uppercase tracking-widest rounded-sm transition-all shadow-sm">
+                <a href="https://wa.me/85244217796" target="_blank" rel="noopener noreferrer" className="inline-block w-full py-3.5 bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-900 font-extrabold uppercase tracking-widest rounded-sm transition-all shadow-sm">
                   Open WhatsApp Chat
                 </a>
               </div>
@@ -852,7 +859,6 @@ export default function App() {
 
                 {cart.length > 0 && (
                   <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex flex-col">
-                    
                     {/* STRUKTURIERTES ADRESSFELD */}
                     <div className="mb-6 space-y-3">
                       <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
