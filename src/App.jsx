@@ -466,7 +466,11 @@ export default function App() {
             {dropdownSearchResults.slice(0, 8).map((product) => (
               <div 
                 key={product.id}
-                onClick={() => handleGroupClick(product.category, product.id)}
+                onClick={() => {
+                  setShowSearchDropdown(false);
+                  setMobileSearchOpen(false);
+                  handleGroupClick(product.category, product.id);
+                }}
                 className="px-5 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex justify-between items-center border-b border-slate-100 dark:border-slate-800/50 last:border-0 transition-colors"
               >
                 <div className="pr-4">
