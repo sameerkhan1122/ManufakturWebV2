@@ -8,6 +8,7 @@ import img_AM10 from './assets/AM10.jpeg';
 import img_AM50 from './assets/AM50.jpeg';
 import img_BAC_3 from './assets/BAC_3.jpeg';
 import img_BAC_10 from './assets/BAC_10.jpeg';
+import img_BACWater10 from './assets/BACWater10.jpeg';
 import img_BBG70 from './assets/BBG70.jpeg';
 import img_BC_10 from './assets/BC_10.jpeg';
 import img_BM_20 from './assets/BM_20.jpeg';
@@ -68,7 +69,7 @@ const allProducts = [
   { id: 'rt2', name: 'RT2 - Retatrutide (2mg/vial*10 vials)', price: 33, category: 'Retatrutide', image: img_Retatrutide },
   { id: 'rt5', name: 'RT5 - Retatrutide (5mg/vial*10 vials)', price: 33, category: 'Retatrutide', image: img_Retatrutide },
   { id: 'rt10', name: 'RT10 - Retatrutide (10mg/vial*10 vials)', price: 47, category: 'Retatrutide', image: img_RT_10 },
-  { id: 'rt15', name: 'RT15 - Retatrutide (15mg/vial*10 vials)', price: 64, category: 'Retatrutide', image: img_Retatrutide },
+  { id: 'rt15', name: 'RT15 - Retatrutide (15mg/vial*10 vials)', price: 64, category: 'Retatrutide', image: img_RT_10 },
   { id: 'rt20', name: 'RT20 - Retatrutide (20mg/vial*10 vials)', price: 80, category: 'Retatrutide', image: img_RT_20 },
   { id: 'rt30', name: 'RT30 - Retatrutide (30mg/vial*10 vials)', price: 121, category: 'Retatrutide', image: img_RT_30 },
   { id: 'rt40', name: 'RT40 - Retatrutide (40mg/vial*10 vials)', price: 161, category: 'Retatrutide', image: img_TR_10_RT_40 },
@@ -129,7 +130,7 @@ const allProducts = [
   
   { id: 'h10', name: 'H10 - HGH 191 AA 97% (10iu/vial*10 vials)', price: 46, category: 'HGH', image: img_H_multi },
   { id: 'h12', name: 'H12 - HGH 191 AA 97% (12iu/vial*10vials)', price: 62, category: 'HGH', image: img_H_multi },
-  { id: 'h15', name: 'H15 - HGH 191 AA 97% (15iu/vial*10vials)', price: 78, category: 'HGH' },
+  { id: 'h15', name: 'H15 - HGH 191 AA 97% (15iu/vial*10vials)', price: 78, category: 'HGH', image: img_H_multi },
   { id: 'h24', name: 'H24 - HGH 191 AA 97% (24iu/vial*10vials)', price: 118, category: 'HGH', image: img_H_24 },
   
   { id: 'hc1000', name: 'HC1000 - HCG (1000iu/vial*10 vials)', price: 40, category: 'HCG' },
@@ -239,7 +240,7 @@ const allProducts = [
   { id: 'fols344-2', name: 'Follistatin 344 95% (2mg/vial*10 vials)', price: 593, category: 'Follistatin' },
   
   { id: 'ba3', name: 'BA3 - BAC Water (3ml)', price: 7, category: 'BAC Water', image: img_BAC_3 },
-  { id: 'ba10', name: 'BA10 - BAC Water (10ml)', price: 11, category: 'BAC Water', image: img_BAC_10 },
+  { id: 'ba10', name: 'BA10 - BAC Water (10ml)', price: 11, category: 'BAC Water', image: img_BACWater10 },
   { id: 'lemon', name: 'Lemon bottle (10mg/vial*10 vials)', price: 55, category: 'Lemon Bottle', image: img_Lemon_Bottle },
   { id: 'redlip', name: 'Red lip balm (10mg/vial*10 vials)', price: 55, category: 'Red Lip Balm' },
   { id: 'botox200', name: 'Botox (200u/vial*10 vials)', price: 110, category: 'Botox' },
@@ -599,13 +600,29 @@ export default function App() {
           {activeTab === 'home' && (
             <div className="space-y-16">
               {!searchQuery && (
-                <div className="text-center py-20 px-4 bg-gradient-to-br from-slate-100 to-white dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-slate-800 rounded-sm shadow-sm relative overflow-hidden">
-                  <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-4 text-slate-900 dark:text-white relative uppercase">
-                    Direct Peptide- & HGH-Manufaktur
-                  </h1>
-                  <p className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto relative font-medium">
-                    {lang === 'EN' ? 'No middlemen. Successfully established in South America, now new in Europe.' : 'Keine Zwischenmänner. Erfolgreich in Südamerika etabliert, jetzt neu in Europa.'}
-                  </p>
+                <div className="py-12 px-6 bg-gradient-to-br from-slate-100 to-white dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-slate-800 rounded-sm shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="flex-1 text-center md:text-left">
+                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-3 text-slate-900 dark:text-white uppercase">
+                      Direct Peptide- & HGH-Manufaktur
+                    </h1>
+                    <p className="text-slate-600 dark:text-slate-400 text-base max-w-xl font-medium">
+                      {lang === 'EN' ? 'No middlemen. Successfully established in South America, now new in Europe.' : 'Keine Zwischenmänner. Erfolgreich in Südamerika etabliert, jetzt neu in Europa.'}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-4 shrink-0">
+                    <div className="w-16 h-16 rounded-sm overflow-hidden border border-slate-300 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800 flex-shrink-0">
+                      <img src={logoJPEG} alt="Logo" className="w-full h-full object-cover" />
+                    </div>
+                    {/* ANIMATION / VIDEO PLACEHOLDER LINKING TO ABOUT US */}
+                    <div 
+                      onClick={() => setActiveTab('about')}
+                      className="w-32 h-20 bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-sm flex flex-col items-center justify-center cursor-pointer hover:border-cyan-600 dark:hover:border-cyan-500 transition-all group relative overflow-hidden shadow-sm"
+                      title="Click to view About Us & Facility"
+                    >
+                      <svg className="w-6 h-6 text-slate-500 dark:text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Animation</span>
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -760,12 +777,13 @@ export default function App() {
 
           {/* ABOUT US TAB */}
           {activeTab === 'about' && (
-            <div className="max-w-4xl mx-auto space-y-12 py-6">
-              <div className="text-center space-y-4">
+            <div className="max-w-4xl mx-auto space-y-10 py-6">
+              <div className="text-center space-y-3">
                 <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white uppercase">About Us</h1>
                 <p className="text-slate-600 dark:text-slate-400 text-lg font-medium">Direct manufacturing standards, uncompromising quality, and global reach.</p>
               </div>
 
+              {/* Heritage section */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm">
                 <div className="space-y-4">
                   <h3 className="text-xl font-black text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Our Heritage & Standards</h3>
@@ -781,10 +799,33 @@ export default function App() {
                 </div>
               </div>
 
+              {/* Main Video Section */}
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
                 <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Production & Facility Preview</h3>
                 <div className="w-full overflow-hidden rounded-sm border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-black flex justify-center">
                   <video src={productionVID} controls autoPlay muted loop className="max-h-[400px] w-full object-cover" />
+                </div>
+              </div>
+
+              {/* ENHANCED SECTION: 2 Image Placeholders & 1 Video Placeholder */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
+                <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Quality Control & Cleanroom Standards</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Image Placeholder 1 */}
+                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center p-4 text-center">
+                    <svg className="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Sterile Cleanroom</span>
+                  </div>
+                  {/* Image Placeholder 2 */}
+                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center p-4 text-center">
+                    <svg className="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500">HPLC Lab Testing</span>
+                  </div>
+                  {/* Video Placeholder */}
+                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center p-4 text-center relative">
+                    <svg className="w-8 h-8 text-cyan-600 dark:text-cyan-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Packaging Process</span>
+                  </div>
                 </div>
               </div>
             </div>
