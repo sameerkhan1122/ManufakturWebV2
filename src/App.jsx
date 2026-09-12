@@ -130,7 +130,7 @@ const allProducts = [
   
   { id: 'h10', name: 'H10 - HGH 191 AA 97% (10iu/vial*10 vials)', price: 46, category: 'HGH', image: img_H_multi },
   { id: 'h12', name: 'H12 - HGH 191 AA 97% (12iu/vial*10vials)', price: 62, category: 'HGH', image: img_H_multi },
-  { id: 'h15', name: 'H15 - HGH 191 AA 97% (15iu/vial*10vials)', price: 78, category: 'HGH', image: img_H_multi },
+  { id: 'h15', name: 'H15 - HGH 191 AA 97% (15iu/vial*10vials)', price: 78, category: 'HGH' },
   { id: 'h24', name: 'H24 - HGH 191 AA 97% (24iu/vial*10vials)', price: 118, category: 'HGH', image: img_H_24 },
   
   { id: 'hc1000', name: 'HC1000 - HCG (1000iu/vial*10 vials)', price: 40, category: 'HCG' },
@@ -218,7 +218,7 @@ const allProducts = [
   { id: 'ra10', name: 'RA10 - Ara-290 (10mg/vial*10 vials)', price: 58, category: 'Ara-290' },
   { id: 'dr5', name: 'DR5 - Dermorphin (5mg/vial*10 vials)', price: 40, category: 'Dermorphin' },
   { id: 'kp10', name: 'KP10 - KPV (10mg/vial*10 vials)', price: 47, category: 'KPV' },
-  { id: 'vp10', name: 'VP10 - VIP (10mg/vial*10 vials)', price: 160, category: 'VIP' },
+  { id: 'vp10', name: 'VIP - VIP (10mg/vial*10 vials)', price: 160, category: 'VIP' },
   
   { id: 'gnd2', name: 'GND2 - Gonadorrlin Acetate (2mg/vial*10 vials)', price: 30, category: 'Gonadorelin' },
   
@@ -762,7 +762,7 @@ export default function App() {
                             }}
                             className="flex-1 h-[52px] bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-950 font-extrabold text-sm uppercase tracking-widest rounded-sm transition-all shadow-sm flex items-center justify-center gap-2"
                           >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                             Add to Cart
                           </button>
                         </div>
@@ -807,9 +807,9 @@ export default function App() {
                 </div>
               </div>
 
-              {/* ENHANCED SECTION: 2 Image Placeholders & 1 Video Placeholder */}
+              {/* SECTION: 2 Image Placeholders & 1 Video Placeholder */}
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
-                <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Quality Control & Cleanroom Standards</h3>
+                <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Behind the Scenes & Insights</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Image Placeholder 1 */}
                   <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center p-4 text-center">
