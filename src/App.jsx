@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import logoJPEG from './assets/logo.jpeg';
 import productionVID from './assets/production.mp4';
 
+// --- NEUE INSIGHT ASSETS ---
+import insightVID from './assets/InsightVideo.mp4';
+import img_InsightWall from './assets/InsightWall.jpeg';
+import img_InsightTower from './assets/InsightTower.jpeg';
+
 // --- ASSET IMPORTE ---
 import img_AA_3 from './assets/AA_3.jpeg';
 import img_AM10 from './assets/AM10.jpeg';
@@ -326,7 +331,6 @@ export default function App() {
 
   const SHIPPING_COST = 60;
 
-  // Browser-Historie initialisieren und bei Back/Forward synchronisieren
   useEffect(() => {
     window.history.replaceState({ activeTab: 'home', selectedGroup: null, selectedVariantId: '' }, '');
 
@@ -583,10 +587,9 @@ export default function App() {
             </div>
           </div>
 
-          {/* MOBILE SEARCH */}
           {mobileSearchOpen && (
             <div className="lg:hidden px-4 pb-4 pt-2 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 relative z-50">
-              <form onSubmit={handleSearchSubmit} className="w-full relative">
+              <form onSubmit={(e) => { e.preventDefault(); setActiveTab('searchResults'); setMobileSearchOpen(false); }} className="w-full relative">
                 <input 
                   type="text" 
                   placeholder="Search products..." 
@@ -629,9 +632,13 @@ export default function App() {
           {activeTab === 'home' && (
             <div className="space-y-16">
               {!searchQuery && (
-                <div className="py-12 px-6 bg-gradient-to-br from-slate-100 to-white dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-slate-800 rounded-sm shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+                <div 
+                  onClick={() => navigateTo('about', null, '')}
+                  className="py-12 px-6 bg-gradient-to-br from-slate-100 to-white dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-slate-800 rounded-sm shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 cursor-pointer group hover:border-cyan-600 dark:hover:border-cyan-500 transition-all"
+                  title="Click to learn more About Us"
+                >
                   <div className="flex-1 text-center md:text-left">
-                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-3 text-slate-900 dark:text-white uppercase">
+                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-3 text-slate-900 dark:text-white uppercase group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                       Direct Peptide- & HGH-Manufaktur
                     </h1>
                     <p className="text-slate-600 dark:text-slate-400 text-base max-w-xl font-medium">
@@ -642,14 +649,16 @@ export default function App() {
                     <div className="w-16 h-16 rounded-sm overflow-hidden border border-slate-300 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800 flex-shrink-0">
                       <img src={logoJPEG} alt="Logo" className="w-full h-full object-cover" />
                     </div>
-                    {/* ANIMATION / VIDEO PLACEHOLDER LINKING TO ABOUT US */}
-                    <div 
-                      onClick={() => navigateTo('about', null, '')}
-                      className="w-32 h-20 bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-sm flex flex-col items-center justify-center cursor-pointer hover:border-cyan-600 dark:hover:border-cyan-500 transition-all group relative overflow-hidden shadow-sm"
-                      title="Click to view About Us & Facility"
-                    >
-                      <svg className="w-6 h-6 text-slate-500 dark:text-slate-400 group-hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Animation</span>
+                    {/* VIDEO/ANIMATIONS-PREVIEW (UNVERÄNDERBAR / LOOP / STUMM) */}
+                    <div className="w-32 h-20 bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-sm flex items-center justify-center overflow-hidden shadow-sm pointer-events-none">
+                      <video 
+                        src={insightVID} 
+                        autoPlay 
+                        muted 
+                        loop 
+                        playsInline 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </div>
                 </div>
@@ -831,29 +840,51 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Main Video Section */}
+              {/* Main Video Section (unveränderbarer Loop) */}
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
                 <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Production & Facility Preview</h3>
-                <div className="w-full overflow-hidden rounded-sm border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-black flex justify-center">
-                  <video src={productionVID} controls autoPlay muted loop className="max-h-[400px] w-full object-cover" />
+                <div className="w-full overflow-hidden rounded-sm border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-black flex justify-center pointer-events-none">
+                  <video 
+                    src={productionVID} 
+                    autoPlay 
+                    muted 
+                    loop 
+                    playsInline 
+                    className="max-h-[400px] w-full object-cover" 
+                  />
                 </div>
               </div>
 
-              {/* SECTION: 2 Image Placeholders & 1 Video Placeholder */}
+              {/* SECTION: 2 Bilder + 1 Video (unveränderbar, wie eine Animation) */}
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
                 <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Behind the Scenes & Insights</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center p-4 text-center">
-                    <svg className="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Sterile Cleanroom</span>
+                  {/* Bild 1: InsightWall */}
+                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative shadow-sm">
+                    <img 
+                      src={img_InsightWall} 
+                      alt="Facility Wall" 
+                      className="w-full h-full object-cover" 
+                    />
                   </div>
-                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center p-4 text-center">
-                    <svg className="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500">HPLC Lab Testing</span>
+                  {/* Bild 2: InsightTower */}
+                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative shadow-sm">
+                    <img 
+                      src={img_InsightTower} 
+                      alt="Production Tower" 
+                      className="w-full h-full object-cover" 
+                    />
                   </div>
-                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center p-4 text-center relative">
-                    <svg className="w-8 h-8 text-cyan-600 dark:text-cyan-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Packaging Process</span>
+                  {/* Video: InsightVideo (als endlose, unantastbare Animation) */}
+                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative shadow-sm pointer-events-none">
+                    <video 
+                      src={insightVID} 
+                      autoPlay 
+                      muted 
+                      loop 
+                      playsInline 
+                      className="w-full h-full object-cover" 
+                    />
                   </div>
                 </div>
               </div>
