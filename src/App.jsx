@@ -589,7 +589,7 @@ export default function App() {
 
           {mobileSearchOpen && (
             <div className="lg:hidden px-4 pb-4 pt-2 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 relative z-50">
-              <form onSubmit={(e) => { e.preventDefault(); setActiveTab('searchResults'); setMobileSearchOpen(false); }} className="w-full relative">
+              <form onSubmit={handleSearchSubmit} className="w-full relative">
                 <input 
                   type="text" 
                   placeholder="Search products..." 
@@ -649,10 +649,10 @@ export default function App() {
                     <div className="w-16 h-16 rounded-sm overflow-hidden border border-slate-300 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800 flex-shrink-0">
                       <img src={logoJPEG} alt="Logo" className="w-full h-full object-cover" />
                     </div>
-                    {/* VIDEO/ANIMATIONS-PREVIEW (UNVERÄNDERBAR / LOOP / STUMM) */}
+                    {/* VIDEO/ANIMATION-PREVIEW (UNVERÄNDERBAR / LOOP / STUMM) */}
                     <div className="w-32 h-20 bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-sm flex items-center justify-center overflow-hidden shadow-sm pointer-events-none">
                       <video 
-                        src={insightVID} 
+                        src={productionVID} 
                         autoPlay 
                         muted 
                         loop 
@@ -840,7 +840,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Main Video Section (unveränderbarer Loop) */}
+              {/* Main Video Section (unveränderbar / stumm / loop) */}
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
                 <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Production & Facility Preview</h3>
                 <div className="w-full overflow-hidden rounded-sm border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-black flex justify-center pointer-events-none">
@@ -855,7 +855,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* SECTION: 2 Bilder + 1 Video (unveränderbar, wie eine Animation) */}
+              {/* SECTION: 2 Bilder + 1 Video (InsightVideo.mp4, InsightWall.jpeg, InsightTower.jpeg) */}
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
                 <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Behind the Scenes & Insights</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -863,7 +863,7 @@ export default function App() {
                   <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative shadow-sm">
                     <img 
                       src={img_InsightWall} 
-                      alt="Facility Wall" 
+                      alt="Insight Wall" 
                       className="w-full h-full object-cover" 
                     />
                   </div>
@@ -871,11 +871,11 @@ export default function App() {
                   <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative shadow-sm">
                     <img 
                       src={img_InsightTower} 
-                      alt="Production Tower" 
+                      alt="Insight Tower" 
                       className="w-full h-full object-cover" 
                     />
                   </div>
-                  {/* Video: InsightVideo (als endlose, unantastbare Animation) */}
+                  {/* Video: InsightVideo (unveränderbar / stumm / loop) */}
                   <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative shadow-sm pointer-events-none">
                     <video 
                       src={insightVID} 
