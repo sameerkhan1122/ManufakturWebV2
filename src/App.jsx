@@ -326,6 +326,37 @@ export default function App() {
 
   const SHIPPING_COST = 60;
 
+  // Browser-Historie initialisieren und bei Back/Forward synchronisieren
+  useEffect(() => {
+    window.history.replaceState({ activeTab: 'home', selectedGroup: null, selectedVariantId: '' }, '');
+
+    const handlePopState = (event) => {
+      if (event.state) {
+        setActiveTab(event.state.activeTab || 'home');
+        setSelectedGroup(event.state.selectedGroup || null);
+        setSelectedVariantId(event.state.selectedVariantId || '');
+      } else {
+        setActiveTab('home');
+        setSelectedGroup(null);
+        setSelectedVariantId('');
+      }
+      setShowSearchDropdown(false);
+      setMobileSearchOpen(false);
+      setMobileMenuOpen(false);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateTo = (tab, group = null, variantId = '') => {
+    setActiveTab(tab);
+    setSelectedGroup(group);
+    setSelectedVariantId(variantId);
+    window.history.pushState({ activeTab: tab, selectedGroup: group, selectedVariantId: variantId }, '');
+    window.scrollTo(0, 0);
+  };
+
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -347,26 +378,23 @@ export default function App() {
   }, []);
 
   const handleGroupClick = (groupName, specificVariantId = null) => {
-    setSelectedGroup(groupName);
-    if (specificVariantId) {
-      setSelectedVariantId(specificVariantId);
-    } else {
+    let targetVariantId = specificVariantId;
+    if (!targetVariantId) {
       const firstProduct = allProducts.find(p => p.category === groupName);
-      if (firstProduct) setSelectedVariantId(firstProduct.id);
+      if (firstProduct) targetVariantId = firstProduct.id;
     }
     setDetailQuantity(1); 
-    setActiveTab('productDetail');
     setShowSearchDropdown(false);
     setMobileSearchOpen(false); 
-    window.scrollTo(0, 0); 
+    navigateTo('productDetail', groupName, targetVariantId || '');
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim().length > 0) {
-      setActiveTab('searchResults');
       setShowSearchDropdown(false);
       setMobileSearchOpen(false); 
+      navigateTo('searchResults', null, '');
     }
   };
 
@@ -446,7 +474,7 @@ export default function App() {
             ))}
             {dropdownSearchResults.length > 8 && (
               <div 
-                onClick={() => { setActiveTab('searchResults'); setShowSearchDropdown(false); setMobileSearchOpen(false); }}
+                onClick={() => { setShowSearchDropdown(false); setMobileSearchOpen(false); navigateTo('searchResults', null, ''); }}
                 className="p-3 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 text-center text-xs font-bold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 cursor-pointer uppercase tracking-widest"
               >
                 View All {dropdownSearchResults.length} Results &rarr;
@@ -467,7 +495,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
             
             {/* LOGO */}
-            <div className="flex items-center gap-6 cursor-pointer shrink-0" onClick={() => { setActiveTab('home'); setSearchQuery(''); }}>
+            <div className="flex items-center gap-6 cursor-pointer shrink-0" onClick={() => { setSearchQuery(''); navigateTo('home', null, ''); }}>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-sm overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800 flex-shrink-0">
                   <img src={logoJPEG} alt="Manufaktur Logo" className="w-full h-full object-cover" />
@@ -481,13 +509,13 @@ export default function App() {
               </div>
 
               <nav className="hidden xl:flex items-center gap-5 ml-4 border-l border-slate-200 dark:border-slate-700 pl-6">
-                <button onClick={(e) => { e.stopPropagation(); setActiveTab('home'); setSearchQuery(''); }} className={`text-sm font-semibold transition-colors ${activeTab === 'home' ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-600 hover:text-cyan-600 dark:text-slate-300 dark:hover:text-cyan-400'}`}>
+                <button onClick={(e) => { e.stopPropagation(); setSearchQuery(''); navigateTo('home', null, ''); }} className={`text-sm font-semibold transition-colors ${activeTab === 'home' ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-600 hover:text-cyan-600 dark:text-slate-300 dark:hover:text-cyan-400'}`}>
                   Home
                 </button>
-                <button onClick={(e) => { e.stopPropagation(); setActiveTab('about'); }} className={`text-sm font-semibold transition-colors ${activeTab === 'about' ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-600 hover:text-cyan-600 dark:text-slate-300 dark:hover:text-cyan-400'}`}>
+                <button onClick={(e) => { e.stopPropagation(); navigateTo('about', null, ''); }} className={`text-sm font-semibold transition-colors ${activeTab === 'about' ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-600 hover:text-cyan-600 dark:text-slate-300 dark:hover:text-cyan-400'}`}>
                   About
                 </button>
-                <button onClick={(e) => { e.stopPropagation(); setActiveTab('contact'); }} className={`text-sm font-semibold transition-colors ${activeTab === 'contact' ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-600 hover:text-cyan-600 dark:text-slate-300 dark:hover:text-cyan-400'}`}>
+                <button onClick={(e) => { e.stopPropagation(); navigateTo('contact', null, ''); }} className={`text-sm font-semibold transition-colors ${activeTab === 'contact' ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-600 hover:text-cyan-600 dark:text-slate-300 dark:hover:text-cyan-400'}`}>
                   Contact
                 </button>
               </nav>
@@ -555,9 +583,10 @@ export default function App() {
             </div>
           </div>
 
+          {/* MOBILE SEARCH */}
           {mobileSearchOpen && (
             <div className="lg:hidden px-4 pb-4 pt-2 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 relative z-50">
-              <form onSubmit={(e) => { e.preventDefault(); setActiveTab('searchResults'); setMobileSearchOpen(false); }} className="w-full relative">
+              <form onSubmit={handleSearchSubmit} className="w-full relative">
                 <input 
                   type="text" 
                   placeholder="Search products..." 
@@ -588,9 +617,9 @@ export default function App() {
                   <div className={`absolute left-0.5 top-0.5 w-3.5 h-3.5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ease-in-out ${isDarkMode ? 'translate-x-5' : 'translate-x-0'}`} />
                 </button>
               </div>
-              <button onClick={() => { setActiveTab('home'); setMobileMenuOpen(false); }} className="block w-full text-left font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-400 py-1">Home</button>
-              <button onClick={() => { setActiveTab('about'); setMobileMenuOpen(false); }} className="block w-full text-left font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-400 py-1">About Us</button>
-              <button onClick={() => { setActiveTab('contact'); setMobileMenuOpen(false); }} className="block w-full text-left font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-400 py-1">Contact</button>
+              <button onClick={() => { setMobileMenuOpen(false); navigateTo('home', null, ''); }} className="block w-full text-left font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-400 py-1">Home</button>
+              <button onClick={() => { setMobileMenuOpen(false); navigateTo('about', null, ''); }} className="block w-full text-left font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-400 py-1">About Us</button>
+              <button onClick={() => { setMobileMenuOpen(false); navigateTo('contact', null, ''); }} className="block w-full text-left font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-400 py-1">Contact</button>
             </div>
           )}
         </header>
@@ -615,11 +644,11 @@ export default function App() {
                     </div>
                     {/* ANIMATION / VIDEO PLACEHOLDER LINKING TO ABOUT US */}
                     <div 
-                      onClick={() => setActiveTab('about')}
+                      onClick={() => navigateTo('about', null, '')}
                       className="w-32 h-20 bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-sm flex flex-col items-center justify-center cursor-pointer hover:border-cyan-600 dark:hover:border-cyan-500 transition-all group relative overflow-hidden shadow-sm"
                       title="Click to view About Us & Facility"
                     >
-                      <svg className="w-6 h-6 text-slate-500 dark:text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                      <svg className="w-6 h-6 text-slate-500 dark:text-slate-400 group-hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                       <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Animation</span>
                     </div>
                   </div>
@@ -656,7 +685,7 @@ export default function App() {
                   <h2 className="text-2xl font-black tracking-tight mb-1 uppercase">Search Results</h2>
                   <p className="text-slate-600 dark:text-slate-400 text-sm">Showing results for: <span className="font-bold text-slate-900 dark:text-white">"{searchQuery}"</span></p>
                 </div>
-                <button onClick={() => { setActiveTab('home'); setSearchQuery(''); }} className="text-sm font-bold text-cyan-600 dark:text-cyan-400 hover:underline">
+                <button onClick={() => { setSearchQuery(''); navigateTo('home', null, ''); }} className="text-sm font-bold text-cyan-600 dark:text-cyan-400 hover:underline">
                   Clear Search &times;
                 </button>
               </div>
@@ -695,7 +724,7 @@ export default function App() {
 
             return (
               <div className="max-w-5xl mx-auto space-y-6">
-                <button onClick={() => setActiveTab(searchQuery ? 'searchResults' : 'home')} className="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 text-sm font-bold flex items-center gap-2 transition-colors uppercase tracking-wider">
+                <button onClick={() => window.history.back()} className="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 text-sm font-bold flex items-center gap-2 transition-colors uppercase tracking-wider">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                   {searchQuery ? 'Back to Search' : 'Back to Catalog'}
                 </button>
@@ -729,7 +758,10 @@ export default function App() {
                         <div className="relative">
                           <select 
                             value={selectedVariantId}
-                            onChange={(e) => setSelectedVariantId(e.target.value)}
+                            onChange={(e) => {
+                              setSelectedVariantId(e.target.value);
+                              window.history.replaceState({ activeTab: 'productDetail', selectedGroup, selectedVariantId: e.target.value }, '');
+                            }}
                             className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-4 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 appearance-none shadow-sm font-medium"
                           >
                             {groupProducts.map(p => (
@@ -762,7 +794,7 @@ export default function App() {
                             }}
                             className="flex-1 h-[52px] bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-950 font-extrabold text-sm uppercase tracking-widest rounded-sm transition-all shadow-sm flex items-center justify-center gap-2"
                           >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                             Add to Cart
                           </button>
                         </div>
@@ -811,17 +843,14 @@ export default function App() {
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
                 <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Behind the Scenes & Insights</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Image Placeholder 1 */}
                   <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center p-4 text-center">
                     <svg className="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Sterile Cleanroom</span>
                   </div>
-                  {/* Image Placeholder 2 */}
                   <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center p-4 text-center">
                     <svg className="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     <span className="text-xs font-bold uppercase tracking-widest text-slate-500">HPLC Lab Testing</span>
                   </div>
-                  {/* Video Placeholder */}
                   <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center p-4 text-center relative">
                     <svg className="w-8 h-8 text-cyan-600 dark:text-cyan-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Packaging Process</span>
