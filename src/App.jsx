@@ -302,8 +302,10 @@ const t = {
     qty: '1 kit / qty',
     shippingAddress: 'Shipping Address',
     optional: 'Optional',
+    email: 'Email Address',
     fullName: 'Full Name',
-    streetHouse: 'Street & House Number',
+    street: 'Street',
+    houseNo: 'House No.',
     zipCode: 'ZIP Code',
     city: 'City',
     country: 'Country',
@@ -354,8 +356,10 @@ const t = {
     qty: '1 Kit / Stk.',
     shippingAddress: 'Lieferadresse',
     optional: 'Optional',
+    email: 'E-Mail-Adresse',
     fullName: 'Vollständiger Name',
-    streetHouse: 'Straße & Hausnummer',
+    street: 'Straße',
+    houseNo: 'Hausnummer',
     zipCode: 'PLZ',
     city: 'Stadt',
     country: 'Land',
@@ -417,8 +421,10 @@ export default function App() {
   const [detailQuantity, setDetailQuantity] = useState(1);
   
   const [address, setAddress] = useState({
+    email: '',
     name: '',
     street: '',
+    houseNo: '',
     zip: '',
     city: '',
     country: ''
@@ -530,13 +536,16 @@ export default function App() {
     message += `\nShipping: $${SHIPPING_COST}`;
     message += `\n*Total Price: $${finalTotal}*\n`;
     
-    const hasAddress = address.name || address.street || address.zip || address.city || address.country;
+    const hasAddress = address.email || address.name || address.street || address.houseNo || address.zip || address.city || address.country;
     if (hasAddress) {
       message += `\n*Shipping Address:*\n`;
-      if (address.name) message += `${address.name}\n`;
-      if (address.street) message += `${address.street}\n`;
-      if (address.zip || address.city) message += `${address.zip} ${address.city}`.trim() + `\n`;
-      if (address.country) message += `${address.country}\n`;
+      if (address.email) message += `Email: ${address.email}\n`;
+      if (address.name) message += `Name: ${address.name}\n`;
+      if (address.street) message += `Street: ${address.street}\n`;
+      if (address.houseNo) message += `House No.: ${address.houseNo}\n`;
+      if (address.zip) message += `ZIP: ${address.zip}\n`;
+      if (address.city) message += `City: ${address.city}\n`;
+      if (address.country) message += `Country: ${address.country}\n`;
     }
 
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
@@ -1031,19 +1040,35 @@ export default function App() {
                       </label>
                       <div className="space-y-2">
                         <input 
+                          type="email" 
+                          placeholder={strings.email}
+                          value={address.email}
+                          onChange={(e) => setAddress({...address, email: e.target.value})}
+                          className="w-full bg-slate-950 border border-slate-700 rounded-sm p-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm placeholder:text-slate-600"
+                        />
+                        <input 
                           type="text" 
                           placeholder={strings.fullName}
                           value={address.name}
                           onChange={(e) => setAddress({...address, name: e.target.value})}
                           className="w-full bg-slate-950 border border-slate-700 rounded-sm p-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm placeholder:text-slate-600"
                         />
-                        <input 
-                          type="text" 
-                          placeholder={strings.streetHouse}
-                          value={address.street}
-                          onChange={(e) => setAddress({...address, street: e.target.value})}
-                          className="w-full bg-slate-950 border border-slate-700 rounded-sm p-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm placeholder:text-slate-600"
-                        />
+                        <div className="flex gap-2">
+                          <input 
+                            type="text" 
+                            placeholder={strings.street}
+                            value={address.street}
+                            onChange={(e) => setAddress({...address, street: e.target.value})}
+                            className="w-2/3 bg-slate-950 border border-slate-700 rounded-sm p-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm placeholder:text-slate-600"
+                          />
+                          <input 
+                            type="text" 
+                            placeholder={strings.houseNo}
+                            value={address.houseNo}
+                            onChange={(e) => setAddress({...address, houseNo: e.target.value})}
+                            className="w-1/3 bg-slate-950 border border-slate-700 rounded-sm p-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm placeholder:text-slate-600"
+                          />
+                        </div>
                         <div className="flex gap-2">
                           <input 
                             type="text" 
