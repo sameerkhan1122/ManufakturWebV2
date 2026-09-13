@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import logoJPEG from './assets/logo.jpeg';
 import productionVID from './assets/production.mp4';
 
-// --- NEUE INSIGHT ASSETS ---
+// --- INSIGHT ASSETS ---
 import insightVID from './assets/InsightVideo.mp4';
 import img_InsightWall from './assets/InsightWall.jpeg';
 import img_InsightTower from './assets/InsightTower.jpeg';
@@ -135,7 +135,7 @@ const allProducts = [
   
   { id: 'h10', name: 'H10 - HGH 191 AA 97% (10iu/vial*10 vials)', price: 46, category: 'HGH', image: img_H_multi },
   { id: 'h12', name: 'H12 - HGH 191 AA 97% (12iu/vial*10vials)', price: 62, category: 'HGH', image: img_H_multi },
-  { id: 'h15', name: 'H15 - HGH 191 AA 97% (15iu/vial*10vials)', price: 78, category: 'HGH' },
+  { id: 'h15', name: 'H15 - HGH 191 AA 97% (15iu/vial*10vials)', price: 78, category: 'HGH', image: img_H_multi },
   { id: 'h24', name: 'H24 - HGH 191 AA 97% (24iu/vial*10vials)', price: 118, category: 'HGH', image: img_H_24 },
   
   { id: 'hc1000', name: 'HC1000 - HCG (1000iu/vial*10 vials)', price: 40, category: 'HCG' },
@@ -258,7 +258,117 @@ const allProducts = [
   { id: 'pnc27', name: 'PNC-27 (10mg/vial*10 vials)', price: 60, category: 'PNC-27' }
 ];
 
-function ProductGroupCard({ groupName, products, onClick }) {
+// Übersetzungen (DE / EN)
+const t = {
+  EN: {
+    shopSubtitle: 'B2B Direct Shop',
+    home: 'Home',
+    about: 'About',
+    contact: 'Contact',
+    searchPlaceholder: 'Search products, dosages, blends...',
+    heroTitle: 'Direct Peptide- & HGH-Manufaktur',
+    heroDesc: 'No middlemen. Successfully established in South America, now new in Europe.',
+    animationLabel: 'Animation',
+    catalogTitle: 'Our Catalog',
+    variantsAvailable: 'Variants Available',
+    startingAt: 'Starting at',
+    viewDetails: 'View Details',
+    searchResults: 'Search Results',
+    showingResults: 'Showing results for:',
+    clearSearch: 'Clear Search',
+    noProductsSearch: 'No products found matching your search.',
+    noProductsDropdown: 'No products found. Press Enter to search anyway.',
+    viewAllResults: 'View All Results',
+    profGrade: 'Professional Grade',
+    detailDesc: 'Select your preferred dosage or variant below. All kits undergo strict oversight to ensure consistent purity and correct dosing for professional requirements.',
+    variantDosage: 'Variant / Dosage',
+    pricePerKit: 'Price per Kit',
+    addToCart: 'Add to Cart',
+    backToSearch: 'Back to Search',
+    backToCatalog: 'Back to Catalog',
+    aboutTitle: 'About Us',
+    aboutSubtitle: 'Direct manufacturing standards, uncompromising quality, and global reach.',
+    heritageTitle: 'Our Heritage & Standards',
+    heritageDesc1: 'Originally established with high success across South American markets, Manufaktur brings elite direct peptide and HGH production standards straight to Europe. By cutting out middlemen and distributors, we guarantee direct-source pricing and strict quality assurance.',
+    heritageDesc2: 'Every kit undergoes strict oversight to ensure consistent purity and correct dosing for professional requirements.',
+    facilityTitle: 'Production & Facility Preview',
+    insightsTitle: 'Behind the Scenes & Insights',
+    contactTitle: 'Contact Us',
+    contactDesc: 'Reach out to our team directly via WhatsApp for inquiries or support.',
+    waSupport: 'WhatsApp Support',
+    waSupportDesc: 'Fast, reliable responses directly from our support desk.',
+    openWaChat: 'Open WhatsApp Chat',
+    cartTitle: 'Shopping Cart',
+    emptyCart: 'Your cart is empty.',
+    qty: '1 kit / qty',
+    shippingAddress: 'Shipping Address',
+    optional: 'Optional',
+    fullName: 'Full Name',
+    streetHouse: 'Street & House Number',
+    zipCode: 'ZIP Code',
+    city: 'City',
+    country: 'Country',
+    subtotal: 'Subtotal:',
+    globalShipping: 'Global Shipping:',
+    total: 'Total:',
+    checkoutWa: 'Checkout (WhatsApp)'
+  },
+  DE: {
+    shopSubtitle: 'B2B Direktshop',
+    home: 'Startseite',
+    about: 'Über uns',
+    contact: 'Kontakt',
+    searchPlaceholder: 'Produkte, Dosierungen, Blends suchen...',
+    heroTitle: 'Direkte Peptid- & HGH-Manufaktur',
+    heroDesc: 'Keine Zwischenmänner. Erfolgreich in Südamerika etabliert, jetzt neu in Europa.',
+    animationLabel: 'Animation',
+    catalogTitle: 'Unser Katalog',
+    variantsAvailable: 'Varianten verfügbar',
+    startingAt: 'Ab',
+    viewDetails: 'Details ansehen',
+    searchResults: 'Suchergebnisse',
+    showingResults: 'Ergebnisse für:',
+    clearSearch: 'Suche löschen',
+    noProductsSearch: 'Keine passenden Produkte gefunden.',
+    noProductsDropdown: 'Keine Produkte gefunden. Enter drücken zum Suchen.',
+    viewAllResults: 'Alle Ergebnisse anzeigen',
+    profGrade: 'Professionelle Qualität',
+    detailDesc: 'Wählen Sie unten Ihre bevorzugte Dosierung oder Variante. Alle Kits unterliegen strengen Qualitätskontrollen für professionelle Ansprüche.',
+    variantDosage: 'Variante / Dosierung',
+    pricePerKit: 'Preis pro Kit',
+    addToCart: 'In den Warenkorb',
+    backToSearch: 'Zurück zur Suche',
+    backToCatalog: 'Zurück zum Katalog',
+    aboutTitle: 'Über uns',
+    aboutSubtitle: 'Direkte Herstellungsstandards, kompromisslose Qualität und globale Reichweite.',
+    heritageTitle: 'Unsere Geschichte & Standards',
+    heritageDesc1: 'Ursprünglich erfolgreich auf südamerikanischen Märkten etabliert, bringt Manufaktur erstklassige Peptid- und HGH-Produktionsstandards direkt nach Europa. Durch den Verzicht auf Zwischenmänner garantieren wir Direktpreise und strengste Qualitätsprüfungen.',
+    heritageDesc2: 'Jedes Kit wird streng überwacht, um konstante Reinheit und korrekte Dosierung zu gewährleisten.',
+    facilityTitle: 'Produktion & Anlagenvorschau',
+    insightsTitle: 'Einblicke & Hinter den Kulissen',
+    contactTitle: 'Kontaktieren Sie uns',
+    contactDesc: 'Wenden Sie sich für Anfragen oder Support direkt über WhatsApp an unser Team.',
+    waSupport: 'WhatsApp Support',
+    waSupportDesc: 'Schnelle und zuverlässige Antworten direkt von unserem Support-Team.',
+    openWaChat: 'WhatsApp-Chat öffnen',
+    cartTitle: 'Warenkorb',
+    emptyCart: 'Ihr Warenkorb ist leer.',
+    qty: '1 Kit / Stk.',
+    shippingAddress: 'Lieferadresse',
+    optional: 'Optional',
+    fullName: 'Vollständiger Name',
+    streetHouse: 'Straße & Hausnummer',
+    zipCode: 'PLZ',
+    city: 'Stadt',
+    country: 'Land',
+    subtotal: 'Zwischensumme:',
+    globalShipping: 'Weltweiter Versand:',
+    total: 'Gesamtbetrag:',
+    checkoutWa: 'Zur Kasse (WhatsApp)'
+  }
+};
+
+function ProductGroupCard({ groupName, products, onClick, startingAtText, variantsText, viewDetailsText }) {
   const startingPrice = Math.min(...products.map(p => p.price));
   const groupImage = products.find(p => p.image)?.image;
   
@@ -278,16 +388,16 @@ function ProductGroupCard({ groupName, products, onClick }) {
       
       <div>
         <h3 className="font-bold text-slate-900 dark:text-slate-200 text-lg uppercase tracking-wider leading-snug">{groupName}</h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{products.length} {products.length === 1 ? 'Variant' : 'Variants'} Available</p>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{products.length} {variantsText}</p>
       </div>
 
       <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
         <div className="flex flex-col">
-          <span className="text-[10px] text-slate-500 uppercase tracking-wider">Starting at</span>
+          <span className="text-[10px] text-slate-500 uppercase tracking-wider">{startingAtText}</span>
           <span className="text-lg font-black text-slate-900 dark:text-white">${startingPrice}</span>
         </div>
         <button className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 group-hover:bg-cyan-600 group-hover:text-white dark:group-hover:bg-cyan-500 dark:group-hover:text-slate-900 font-bold text-xs rounded-sm transition-colors">
-          View Details
+          {viewDetailsText}
         </button>
       </div>
     </div>
@@ -295,16 +405,6 @@ function ProductGroupCard({ groupName, products, onClick }) {
 }
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme !== null) {
-        return savedTheme === 'dark';
-      }
-    }
-    return true; 
-  });
-
   const [lang, setLang] = useState('EN');
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -328,8 +428,8 @@ export default function App() {
 
   const searchContainerRef = useRef(null);
   const categoriesList = [...new Set(allProducts.map(p => p.category))];
-
   const SHIPPING_COST = 60;
+  const strings = t[lang];
 
   useEffect(() => {
     window.history.replaceState({ activeTab: 'home', selectedGroup: null, selectedVariantId: '' }, '');
@@ -360,16 +460,6 @@ export default function App() {
     window.history.pushState({ activeTab: tab, selectedGroup: group, selectedVariantId: variantId }, '');
     window.scrollTo(0, 0);
   };
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDarkMode]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -460,7 +550,7 @@ export default function App() {
     return (
       <div className="absolute top-[calc(100%+8px)] left-0 right-0 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-sm shadow-xl overflow-hidden z-[100] max-h-[60vh] overflow-y-auto">
         {dropdownSearchResults.length === 0 ? (
-          <div className="p-4 text-center text-sm text-slate-500 dark:text-slate-400">No products found. Press Enter to search anyway.</div>
+          <div className="p-4 text-center text-sm text-slate-500 dark:text-slate-400">{strings.noProductsDropdown}</div>
         ) : (
           <div>
             {dropdownSearchResults.slice(0, 8).map((product) => (
@@ -485,7 +575,7 @@ export default function App() {
                 onClick={() => { setShowSearchDropdown(false); setMobileSearchOpen(false); navigateTo('searchResults', null, ''); }}
                 className="p-3 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 text-center text-xs font-bold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 cursor-pointer uppercase tracking-widest"
               >
-                View All {dropdownSearchResults.length} Results &rarr;
+                {strings.viewAllResults} &rarr;
               </div>
             )}
           </div>
@@ -495,36 +585,36 @@ export default function App() {
   };
 
   return (
-    <div className={isDarkMode ? 'dark' : ''}>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-cyan-600 dark:selection:bg-cyan-500 selection:text-white dark:selection:text-slate-900 transition-colors duration-300">
+    <div className="dark">
+      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500 selection:text-slate-900 transition-colors duration-300">
         
         {/* HEADER */}
-        <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+        <header className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 transition-colors duration-300">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
             
             {/* LOGO */}
             <div className="flex items-center gap-6 cursor-pointer shrink-0" onClick={() => { setSearchQuery(''); navigateTo('home', null, ''); }}>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-sm overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800 flex-shrink-0">
+                <div className="w-10 h-10 rounded-sm overflow-hidden border border-slate-700 shadow-sm bg-slate-800 flex-shrink-0">
                   <img src={logoJPEG} alt="Manufaktur Logo" className="w-full h-full object-cover" />
                 </div>
                 <div className="hidden sm:block">
-                  <span className="font-extrabold text-lg tracking-wider text-slate-900 dark:text-white">
+                  <span className="font-extrabold text-lg tracking-wider text-white">
                     MANUFAKTUR
                   </span>
-                  <span className="block text-[10px] text-slate-500 dark:text-slate-400 tracking-widest uppercase">B2B Direct Shop</span>
+                  <span className="block text-[10px] text-slate-400 tracking-widest uppercase">{strings.shopSubtitle}</span>
                 </div>
               </div>
 
-              <nav className="hidden xl:flex items-center gap-5 ml-4 border-l border-slate-200 dark:border-slate-700 pl-6">
-                <button onClick={(e) => { e.stopPropagation(); setSearchQuery(''); navigateTo('home', null, ''); }} className={`text-sm font-semibold transition-colors ${activeTab === 'home' ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-600 hover:text-cyan-600 dark:text-slate-300 dark:hover:text-cyan-400'}`}>
-                  Home
+              <nav className="hidden xl:flex items-center gap-5 ml-4 border-l border-slate-700 pl-6">
+                <button onClick={(e) => { e.stopPropagation(); setSearchQuery(''); navigateTo('home', null, ''); }} className={`text-sm font-semibold transition-colors ${activeTab === 'home' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400'}`}>
+                  {strings.home}
                 </button>
-                <button onClick={(e) => { e.stopPropagation(); navigateTo('about', null, ''); }} className={`text-sm font-semibold transition-colors ${activeTab === 'about' ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-600 hover:text-cyan-600 dark:text-slate-300 dark:hover:text-cyan-400'}`}>
-                  About
+                <button onClick={(e) => { e.stopPropagation(); navigateTo('about', null, ''); }} className={`text-sm font-semibold transition-colors ${activeTab === 'about' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400'}`}>
+                  {strings.about}
                 </button>
-                <button onClick={(e) => { e.stopPropagation(); navigateTo('contact', null, ''); }} className={`text-sm font-semibold transition-colors ${activeTab === 'contact' ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-600 hover:text-cyan-600 dark:text-slate-300 dark:hover:text-cyan-400'}`}>
-                  Contact
+                <button onClick={(e) => { e.stopPropagation(); navigateTo('contact', null, ''); }} className={`text-sm font-semibold transition-colors ${activeTab === 'contact' ? 'text-cyan-400' : 'text-slate-300 hover:text-cyan-400'}`}>
+                  {strings.contact}
                 </button>
               </nav>
             </div>
@@ -534,18 +624,18 @@ export default function App() {
               <form onSubmit={handleSearchSubmit} className="w-full relative">
                 <input 
                   type="text" 
-                  placeholder="Search products, dosages, blends..." 
+                  placeholder={strings.searchPlaceholder} 
                   value={searchQuery}
                   onFocus={() => setShowSearchDropdown(true)}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
                     setShowSearchDropdown(true);
                   }}
-                  className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm py-2.5 pl-4 pr-12 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm placeholder:text-slate-500"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-sm py-2.5 pl-4 pr-12 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm placeholder:text-slate-500"
                 />
                 <button 
                   type="submit" 
-                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center p-1.5 text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors h-fit"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center p-1.5 text-slate-400 hover:text-cyan-400 transition-colors h-fit"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </button>
@@ -555,28 +645,15 @@ export default function App() {
 
             {/* ACTION ICONS */}
             <div className="flex items-center justify-end gap-2 sm:gap-3 shrink-0">
-              <button onClick={() => setMobileSearchOpen(!mobileSearchOpen)} className="lg:hidden p-2 text-slate-500 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400">
+              <button onClick={() => setMobileSearchOpen(!mobileSearchOpen)} className="lg:hidden p-2 text-slate-300 hover:text-cyan-400">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
               </button>
 
-              <div className="hidden sm:flex items-center gap-2 mr-2">
-                <span onClick={() => setIsDarkMode(!isDarkMode)} className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest cursor-pointer select-none">
-                  Dark Mode
-                </span>
-                <button 
-                  onClick={() => setIsDarkMode(!isDarkMode)} 
-                  className={`relative w-10 h-5 rounded-full transition-colors duration-300 ease-in-out border border-slate-300 dark:border-slate-700 ${isDarkMode ? 'bg-cyan-600 dark:bg-cyan-500' : 'bg-slate-200'}`}
-                  title="Toggle Theme"
-                >
-                  <div className={`absolute left-0.5 top-0.5 w-3.5 h-3.5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ease-in-out ${isDarkMode ? 'translate-x-5' : 'translate-x-0'}`} />
-                </button>
-              </div>
-
-              <button onClick={() => setLang(lang === 'EN' ? 'DE' : 'EN')} className="px-2.5 py-1.5 text-xs font-bold rounded-sm bg-white dark:bg-slate-800 text-cyan-700 dark:text-cyan-400 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 dark:hover:border-cyan-500 transition-all shadow-sm">
+              <button onClick={() => setLang(lang === 'EN' ? 'DE' : 'EN')} className="px-2.5 py-1.5 text-xs font-bold rounded-sm bg-slate-800 text-cyan-400 border border-slate-700 hover:border-cyan-500 transition-all shadow-sm">
                 {lang}
               </button>
 
-              <button onClick={() => setIsCartOpen(true)} className="relative p-2.5 rounded-sm bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-cyan-500 dark:hover:border-cyan-500 transition-all shadow-sm">
+              <button onClick={() => setIsCartOpen(true)} className="relative p-2.5 rounded-sm bg-slate-800 text-slate-200 border border-slate-700 hover:border-cyan-500 transition-all shadow-sm">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 {cart.length > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
@@ -585,27 +662,27 @@ export default function App() {
                 )}
               </button>
 
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="xl:hidden p-2 text-slate-500 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400">
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="xl:hidden p-2 text-slate-300 hover:text-cyan-400">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
               </button>
             </div>
           </div>
 
           {mobileSearchOpen && (
-            <div className="lg:hidden px-4 pb-4 pt-2 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 relative z-50">
+            <div className="lg:hidden px-4 pb-4 pt-2 border-t border-slate-800 bg-slate-900 relative z-50">
               <form onSubmit={handleSearchSubmit} className="w-full relative">
                 <input 
                   type="text" 
-                  placeholder="Search products..." 
+                  placeholder={strings.searchPlaceholder} 
                   value={searchQuery}
                   onFocus={() => setShowSearchDropdown(true)}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
                     setShowSearchDropdown(true);
                   }}
-                  className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm py-2.5 pl-4 pr-12 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-sm py-2.5 pl-4 pr-12 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm"
                 />
-                <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center p-1.5 text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors h-fit">
+                <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center p-1.5 text-slate-400 hover:text-cyan-400 transition-colors h-fit">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </button>
               </form>
@@ -614,19 +691,10 @@ export default function App() {
           )}
 
           {mobileMenuOpen && (
-            <div className="xl:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 py-4 space-y-3">
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Dark Mode</span>
-                <button 
-                  onClick={() => setIsDarkMode(!isDarkMode)} 
-                  className={`relative w-10 h-5 rounded-full transition-colors duration-300 ease-in-out border border-slate-300 dark:border-slate-700 ${isDarkMode ? 'bg-cyan-600 dark:bg-cyan-500' : 'bg-slate-200'}`}
-                >
-                  <div className={`absolute left-0.5 top-0.5 w-3.5 h-3.5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ease-in-out ${isDarkMode ? 'translate-x-5' : 'translate-x-0'}`} />
-                </button>
-              </div>
-              <button onClick={() => { setMobileMenuOpen(false); navigateTo('home', null, ''); }} className="block w-full text-left font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-400 py-1">Home</button>
-              <button onClick={() => { setMobileMenuOpen(false); navigateTo('about', null, ''); }} className="block w-full text-left font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-400 py-1">About Us</button>
-              <button onClick={() => { setMobileMenuOpen(false); navigateTo('contact', null, ''); }} className="block w-full text-left font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-400 py-1">Contact</button>
+            <div className="xl:hidden bg-slate-900 border-t border-slate-800 px-4 py-4 space-y-3">
+              <button onClick={() => { setMobileMenuOpen(false); navigateTo('home', null, ''); }} className="block w-full text-left font-medium text-slate-200 hover:text-cyan-400 py-1">{strings.home}</button>
+              <button onClick={() => { setMobileMenuOpen(false); navigateTo('about', null, ''); }} className="block w-full text-left font-medium text-slate-200 hover:text-cyan-400 py-1">{strings.about}</button>
+              <button onClick={() => { setMobileMenuOpen(false); navigateTo('contact', null, ''); }} className="block w-full text-left font-medium text-slate-200 hover:text-cyan-400 py-1">{strings.contact}</button>
             </div>
           )}
         </header>
@@ -638,23 +706,23 @@ export default function App() {
               {!searchQuery && (
                 <div 
                   onClick={() => navigateTo('about', null, '')}
-                  className="py-12 px-6 bg-gradient-to-br from-slate-100 to-white dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-slate-800 rounded-sm shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 cursor-pointer group hover:border-cyan-600 dark:hover:border-cyan-500 transition-all"
+                  className="py-12 px-6 bg-slate-900 border border-slate-800 rounded-sm shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 cursor-pointer group hover:border-cyan-500 transition-all"
                   title="Click to learn more About Us"
                 >
                   <div className="flex-1 text-center md:text-left">
-                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-3 text-slate-900 dark:text-white uppercase group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                      Direct Peptide- & HGH-Manufaktur
+                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-3 text-white uppercase group-hover:text-cyan-400 transition-colors">
+                      {strings.heroTitle}
                     </h1>
-                    <p className="text-slate-600 dark:text-slate-400 text-base max-w-xl font-medium">
-                      {lang === 'EN' ? 'No middlemen. Successfully established in South America, now new in Europe.' : 'Keine Zwischenmänner. Erfolgreich in Südamerika etabliert, jetzt neu in Europa.'}
+                    <p className="text-slate-400 text-base max-w-xl font-medium">
+                      {strings.heroDesc}
                     </p>
                   </div>
                   <div className="flex items-center gap-4 shrink-0">
-                    <div className="w-16 h-16 rounded-sm overflow-hidden border border-slate-300 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800 flex-shrink-0">
+                    <div className="w-16 h-16 rounded-sm overflow-hidden border border-slate-700 shadow-sm bg-slate-800 flex-shrink-0">
                       <img src={logoJPEG} alt="Logo" className="w-full h-full object-cover" />
                     </div>
-                    {/* VIDEO/ANIMATION-PREVIEW (UNVERÄNDERBAR / LOOP / STUMM) */}
-                    <div className="w-32 h-20 bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-sm flex items-center justify-center overflow-hidden shadow-sm pointer-events-none">
+                    {/* VIDEO/ANIMATION-PREVIEW */}
+                    <div className="w-32 h-20 bg-slate-800 border border-slate-700 rounded-sm flex items-center justify-center overflow-hidden shadow-sm pointer-events-none">
                       <video 
                         src={productionVID} 
                         autoPlay 
@@ -670,7 +738,7 @@ export default function App() {
 
               <div>
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white uppercase">Our Catalog</h2>
+                  <h2 className="text-2xl font-black tracking-tight text-white uppercase">{strings.catalogTitle}</h2>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -682,6 +750,9 @@ export default function App() {
                         groupName={category}
                         products={catProducts}
                         onClick={handleGroupClick}
+                        startingAtText={strings.startingAt}
+                        variantsText={strings.variantsAvailable}
+                        viewDetailsText={strings.viewDetails}
                       />
                     );
                   })}
@@ -693,20 +764,20 @@ export default function App() {
           {/* SUCH-ERGEBNISSEITE */}
           {activeTab === 'searchResults' && (
             <div className="space-y-8">
-              <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-800">
                 <div>
-                  <h2 className="text-2xl font-black tracking-tight mb-1 uppercase">Search Results</h2>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm">Showing results for: <span className="font-bold text-slate-900 dark:text-white">"{searchQuery}"</span></p>
+                  <h2 className="text-2xl font-black tracking-tight mb-1 uppercase">{strings.searchResults}</h2>
+                  <p className="text-slate-400 text-sm">{strings.showingResults} <span className="font-bold text-white">"{searchQuery}"</span></p>
                 </div>
-                <button onClick={() => { setSearchQuery(''); navigateTo('home', null, ''); }} className="text-sm font-bold text-cyan-600 dark:text-cyan-400 hover:underline">
-                  Clear Search &times;
+                <button onClick={() => { setSearchQuery(''); navigateTo('home', null, ''); }} className="text-sm font-bold text-cyan-400 hover:underline">
+                  {strings.clearSearch} &times;
                 </button>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {categoriesList.map(category => {
                   const matchesSearch = category.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                        allProducts.some(p => p.category === category && p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+                                      allProducts.some(p => p.category === category && p.name.toLowerCase().includes(searchQuery.toLowerCase()));
                   
                   if (!matchesSearch) return null;
 
@@ -717,13 +788,16 @@ export default function App() {
                       groupName={category}
                       products={catProducts}
                       onClick={handleGroupClick}
+                      startingAtText={strings.startingAt}
+                      variantsText={strings.variantsAvailable}
+                      viewDetailsText={strings.viewDetails}
                     />
                   );
                 })}
                 
                 {!categoriesList.some(category => category.toLowerCase().includes(searchQuery.toLowerCase()) || allProducts.some(p => p.category === category && p.name.toLowerCase().includes(searchQuery.toLowerCase()))) && (
-                  <div className="col-span-full text-center py-20 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm shadow-sm">
-                    <p className="text-slate-500 dark:text-slate-400 font-medium">No products found matching your search.</p>
+                  <div className="col-span-full text-center py-20 bg-slate-900 border border-slate-800 rounded-sm shadow-sm">
+                    <p className="text-slate-400 font-medium">{strings.noProductsSearch}</p>
                   </div>
                 )}
               </div>
@@ -737,37 +811,37 @@ export default function App() {
 
             return (
               <div className="max-w-5xl mx-auto space-y-6">
-                <button onClick={() => window.history.back()} className="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 text-sm font-bold flex items-center gap-2 transition-colors uppercase tracking-wider">
+                <button onClick={() => window.history.back()} className="text-slate-400 hover:text-cyan-400 text-sm font-bold flex items-center gap-2 transition-colors uppercase tracking-wider">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                  {searchQuery ? 'Back to Search' : 'Back to Catalog'}
+                  {searchQuery ? strings.backToSearch : strings.backToCatalog}
                 </button>
                 
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm p-6 md:p-10 flex flex-col md:flex-row gap-10 shadow-md">
-                  <div className="w-full md:w-1/2 aspect-square bg-slate-50 dark:bg-slate-950 rounded-sm flex flex-col items-center justify-center border border-slate-200 dark:border-slate-800 relative overflow-hidden group">
+                <div className="bg-slate-900 border border-slate-800 rounded-sm p-6 md:p-10 flex flex-col md:flex-row gap-10 shadow-md">
+                  <div className="w-full md:w-1/2 aspect-square bg-slate-950 rounded-sm flex flex-col items-center justify-center border border-slate-800 relative overflow-hidden group">
                     {currentProduct?.image ? (
                       <img src={currentProduct.image} alt={currentProduct.name} className="w-full h-full object-cover" />
                     ) : (
                       <>
-                        <svg className="w-16 h-16 text-slate-300 dark:text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        <span className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest text-sm">No Image</span>
+                        <svg className="w-16 h-16 text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span className="text-slate-500 font-bold uppercase tracking-widest text-sm">No Image</span>
                       </>
                     )}
                   </div>
 
                   <div className="w-full md:w-1/2 flex flex-col justify-center">
                     <div className="mb-8">
-                      <div className="inline-block px-2.5 py-1 bg-slate-100 dark:bg-cyan-500/10 text-slate-600 dark:text-cyan-400 border border-slate-200 dark:border-transparent text-[10px] font-bold rounded-sm mb-4 uppercase tracking-widest">
-                        Professional Grade
+                      <div className="inline-block px-2.5 py-1 bg-cyan-500/10 text-cyan-400 text-[10px] font-bold rounded-sm mb-4 uppercase tracking-widest">
+                        {strings.profGrade}
                       </div>
-                      <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4 uppercase leading-snug">{selectedGroup}</h1>
-                      <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed font-medium">
-                        Select your preferred dosage or variant below. All kits undergo strict oversight to ensure consistent purity and correct dosing for professional requirements.
+                      <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white mb-4 uppercase leading-snug">{selectedGroup}</h1>
+                      <p className="text-slate-400 text-sm leading-relaxed font-medium">
+                        {strings.detailDesc}
                       </p>
                     </div>
 
                     <div className="space-y-6">
                       <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Variant / Dosage</label>
+                        <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">{strings.variantDosage}</label>
                         <div className="relative">
                           <select 
                             value={selectedVariantId}
@@ -775,29 +849,29 @@ export default function App() {
                               setSelectedVariantId(e.target.value);
                               window.history.replaceState({ activeTab: 'productDetail', selectedGroup, selectedVariantId: e.target.value }, '');
                             }}
-                            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-4 text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 appearance-none shadow-sm font-medium"
+                            className="w-full bg-slate-950 border border-slate-700 rounded-sm p-4 text-slate-200 focus:outline-none focus:border-cyan-500 appearance-none shadow-sm font-medium"
                           >
                             {groupProducts.map(p => (
                               <option key={p.id} value={p.id}>{p.name}</option>
                             ))}
                           </select>
-                          <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-500 dark:text-slate-400">
+                          <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-400">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                           </div>
                         </div>
                       </div>
 
-                      <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
+                      <div className="pt-6 border-t border-slate-800">
                         <div className="flex items-end justify-between mb-6">
-                          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Price per Kit</span>
-                          <span className="text-4xl font-black text-slate-900 dark:text-white">${currentProduct?.price}</span>
+                          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{strings.pricePerKit}</span>
+                          <span className="text-4xl font-black text-white">${currentProduct?.price}</span>
                         </div>
 
                         <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-1 shadow-sm h-[52px]">
-                            <button onClick={() => setDetailQuantity(Math.max(1, detailQuantity - 1))} className="w-10 h-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-200 dark:bg-slate-800 rounded-sm font-bold text-xl transition-colors">-</button>
-                            <span className="text-lg font-bold w-10 text-center text-slate-900 dark:text-white">{detailQuantity}</span>
-                            <button onClick={() => setDetailQuantity(detailQuantity + 1)} className="w-10 h-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-200 dark:bg-slate-800 rounded-sm font-bold text-xl transition-colors">+</button>
+                          <div className="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-sm p-1 shadow-sm h-[52px]">
+                            <button onClick={() => setDetailQuantity(Math.max(1, detailQuantity - 1))} className="w-10 h-full flex items-center justify-center text-slate-400 hover:text-white bg-slate-800 rounded-sm font-bold text-xl transition-colors">-</button>
+                            <span className="text-lg font-bold w-10 text-center text-white">{detailQuantity}</span>
+                            <button onClick={() => setDetailQuantity(detailQuantity + 1)} className="w-10 h-full flex items-center justify-center text-slate-400 hover:text-white bg-slate-800 rounded-sm font-bold text-xl transition-colors">+</button>
                           </div>
                           
                           <button 
@@ -805,10 +879,10 @@ export default function App() {
                               addToCart(currentProduct, detailQuantity);
                               setDetailQuantity(1);
                             }}
-                            className="flex-1 h-[52px] bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-950 font-extrabold text-sm uppercase tracking-widest rounded-sm transition-all shadow-sm flex items-center justify-center gap-2"
+                            className="flex-1 h-[52px] bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-sm uppercase tracking-widest rounded-sm transition-all shadow-sm flex items-center justify-center gap-2"
                           >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            Add to Cart
+                            {strings.addToCart}
                           </button>
                         </div>
                       </div>
@@ -824,30 +898,30 @@ export default function App() {
           {activeTab === 'about' && (
             <div className="max-w-4xl mx-auto space-y-10 py-6">
               <div className="text-center space-y-3">
-                <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white uppercase">About Us</h1>
-                <p className="text-slate-600 dark:text-slate-400 text-lg font-medium">Direct manufacturing standards, uncompromising quality, and global reach.</p>
+                <h1 className="text-4xl font-black tracking-tight text-white uppercase">{strings.aboutTitle}</h1>
+                <p className="text-slate-400 text-lg font-medium">{strings.aboutSubtitle}</p>
               </div>
 
               {/* Heritage section */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-slate-900 border border-slate-800 p-8 rounded-sm shadow-sm">
                 <div className="space-y-4">
-                  <h3 className="text-xl font-black text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Our Heritage & Standards</h3>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed font-medium">
-                    Originally established with high success across South American markets, Manufaktur brings elite direct peptide and HGH production standards straight to Europe. By cutting out middlemen and distributors, we guarantee direct-source pricing and strict quality assurance.
+                  <h3 className="text-xl font-black text-cyan-400 uppercase tracking-wider">{strings.heritageTitle}</h3>
+                  <p className="text-slate-300 text-sm leading-relaxed font-medium">
+                    {strings.heritageDesc1}
                   </p>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed font-medium">
-                    Every kit undergoes strict oversight to ensure consistent purity and correct dosing for professional requirements.
+                  <p className="text-slate-300 text-sm leading-relaxed font-medium">
+                    {strings.heritageDesc2}
                   </p>
                 </div>
                 <div className="flex justify-center">
-                  <img src={logoJPEG} alt="Manufaktur Logo" className="rounded-sm border border-slate-200 dark:border-slate-700 shadow-sm max-h-64 object-cover w-full" />
+                  <img src={logoJPEG} alt="Manufaktur Logo" className="rounded-sm border border-slate-700 shadow-sm max-h-64 object-cover w-full" />
                 </div>
               </div>
 
-              {/* Main Video Section (unveränderbar / stumm / loop) */}
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
-                <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Production & Facility Preview</h3>
-                <div className="w-full overflow-hidden rounded-sm border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-black flex justify-center pointer-events-none">
+              {/* Main Video Section */}
+              <div className="bg-slate-900 border border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
+                <h3 className="text-xl font-black text-center text-cyan-400 uppercase tracking-wider">{strings.facilityTitle}</h3>
+                <div className="w-full overflow-hidden rounded-sm border border-slate-700 shadow-sm bg-black flex justify-center pointer-events-none">
                   <video 
                     src={productionVID} 
                     autoPlay 
@@ -859,36 +933,18 @@ export default function App() {
                 </div>
               </div>
 
-              {/* SECTION: 2 Bilder + 1 Video (InsightVideo.mp4, InsightWall.jpeg, InsightTower.jpeg) */}
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
-                <h3 className="text-xl font-black text-center text-slate-900 dark:text-cyan-400 uppercase tracking-wider">Behind the Scenes & Insights</h3>
+              {/* INSIGHTS SECTION */}
+              <div className="bg-slate-900 border border-slate-800 p-8 rounded-sm shadow-sm space-y-6">
+                <h3 className="text-xl font-black text-center text-cyan-400 uppercase tracking-wider">{strings.insightsTitle}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Bild 1: InsightWall */}
-                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative shadow-sm">
-                    <img 
-                      src={img_InsightWall} 
-                      alt="Insight Wall" 
-                      className="w-full h-full object-cover" 
-                    />
+                  <div className="aspect-video bg-slate-950 rounded-sm border border-slate-800 overflow-hidden relative shadow-sm">
+                    <img src={img_InsightWall} alt="Insight Wall" className="w-full h-full object-cover" />
                   </div>
-                  {/* Bild 2: InsightTower */}
-                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative shadow-sm">
-                    <img 
-                      src={img_InsightTower} 
-                      alt="Insight Tower" 
-                      className="w-full h-full object-cover" 
-                    />
+                  <div className="aspect-video bg-slate-950 rounded-sm border border-slate-800 overflow-hidden relative shadow-sm">
+                    <img src={img_InsightTower} alt="Insight Tower" className="w-full h-full object-cover" />
                   </div>
-                  {/* Video: InsightVideo (unveränderbar / stumm / loop) */}
-                  <div className="aspect-video bg-slate-50 dark:bg-slate-950 rounded-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative shadow-sm pointer-events-none">
-                    <video 
-                      src={insightVID} 
-                      autoPlay 
-                      muted 
-                      loop 
-                      playsInline 
-                      className="w-full h-full object-cover" 
-                    />
+                  <div className="aspect-video bg-slate-950 rounded-sm border border-slate-800 overflow-hidden relative shadow-sm pointer-events-none">
+                    <video src={insightVID} autoPlay muted loop playsInline className="w-full h-full object-cover" />
                   </div>
                 </div>
               </div>
@@ -899,20 +955,20 @@ export default function App() {
           {activeTab === 'contact' && (
             <div className="max-w-xl mx-auto py-12 space-y-8">
               <div className="text-center space-y-2">
-                <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white uppercase">Contact Us</h1>
-                <p className="text-slate-600 dark:text-slate-400 text-sm font-medium">Reach out to our team directly via WhatsApp for inquiries or support.</p>
+                <h1 className="text-4xl font-black tracking-tight text-white uppercase">{strings.contactTitle}</h1>
+                <p className="text-slate-400 text-sm font-medium">{strings.contactDesc}</p>
               </div>
 
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-sm shadow-sm text-center space-y-6">
-                <div className="w-16 h-16 bg-slate-100 dark:bg-cyan-500/10 border border-slate-200 dark:border-cyan-500/30 text-slate-800 dark:text-cyan-400 rounded-sm flex items-center justify-center mx-auto text-2xl shadow-sm">
+              <div className="bg-slate-900 border border-slate-800 p-8 rounded-sm shadow-sm text-center space-y-6">
+                <div className="w-16 h-16 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-sm flex items-center justify-center mx-auto text-2xl shadow-sm">
                   💬
                 </div>
                 <div>
-                  <h3 className="text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">WhatsApp Support</h3>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Fast, reliable responses directly from our support desk.</p>
+                  <h3 className="text-lg font-black uppercase tracking-wider text-white">{strings.waSupport}</h3>
+                  <p className="text-slate-400 text-sm mt-1 font-medium">{strings.waSupportDesc}</p>
                 </div>
-                <a href="https://wa.me/85244217796" target="_blank" rel="noopener noreferrer" className="inline-block w-full py-3.5 bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-900 font-extrabold uppercase tracking-widest rounded-sm transition-all shadow-sm">
-                  Open WhatsApp Chat
+                <a href="https://wa.me/85244217796" target="_blank" rel="noopener noreferrer" className="inline-block w-full py-3.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold uppercase tracking-widest rounded-sm transition-all shadow-sm">
+                  {strings.openWaChat}
                 </a>
               </div>
             </div>
@@ -923,39 +979,39 @@ export default function App() {
         {/* CART SLIDE-OVER DRAWER */}
         {isCartOpen && (
           <div className="fixed inset-0 z-50 overflow-hidden">
-            <div className="absolute inset-0 bg-slate-900/50 dark:bg-black/70 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)}></div>
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)}></div>
             <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
-              <div className="w-screen max-w-md bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-2xl">
+              <div className="w-screen max-w-md bg-slate-900 border-l border-slate-800 flex flex-col shadow-2xl">
                 
-                <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                  <h2 className="text-lg font-black uppercase tracking-wider flex items-center gap-2 text-slate-900 dark:text-white">
-                    Shopping Cart <span className="text-xs bg-slate-100 dark:bg-cyan-500/10 text-slate-600 dark:text-cyan-400 border border-slate-200 dark:border-cyan-500/30 px-2 py-0.5 rounded-sm">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
+                <div className="p-6 border-b border-slate-800 flex items-center justify-between">
+                  <h2 className="text-lg font-black uppercase tracking-wider flex items-center gap-2 text-white">
+                    {strings.cartTitle} <span className="text-xs bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded-sm">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
                   </h2>
-                  <button onClick={() => setIsCartOpen(false)} className="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1 transition-colors">
+                  <button onClick={() => setIsCartOpen(false)} className="text-slate-400 hover:text-white p-1 transition-colors">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                   </button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-6 space-y-4">
                   {cart.length === 0 ? (
-                    <div className="text-center py-20 text-slate-400 dark:text-slate-500 space-y-3">
+                    <div className="text-center py-20 text-slate-500 space-y-3">
                       <svg className="w-12 h-12 mx-auto opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                      <p className="text-sm font-medium">Your cart is empty.</p>
+                      <p className="text-sm font-medium">{strings.emptyCart}</p>
                     </div>
                   ) : (
                     cart.map(item => (
-                      <div key={item.id} className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 rounded-sm flex flex-col gap-3 shadow-sm">
+                      <div key={item.id} className="bg-slate-950 border border-slate-800 p-4 rounded-sm flex flex-col gap-3 shadow-sm">
                         <div className="flex justify-between items-start gap-2">
-                          <h4 className="font-bold text-sm text-slate-900 dark:text-slate-200 leading-snug">{item.name}</h4>
-                          <span className="font-black text-slate-900 dark:text-white">${item.price * item.quantity}</span>
+                          <h4 className="font-bold text-sm text-slate-200 leading-snug">{item.name}</h4>
+                          <span className="font-black text-white">${item.price * item.quantity}</span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm p-1 shadow-sm">
-                            <button onClick={() => updateQuantity(item.id, -1)} className="w-6 h-6 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-sm font-bold transition-colors">-</button>
-                            <span className="text-xs font-bold px-2 text-slate-900 dark:text-white">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.id, 1)} className="w-6 h-6 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-sm font-bold transition-colors">+</button>
+                          <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-sm p-1 shadow-sm">
+                            <button onClick={() => updateQuantity(item.id, -1)} className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white bg-slate-800 rounded-sm font-bold transition-colors">-</button>
+                            <span className="text-xs font-bold px-2 text-white">{item.quantity}</span>
+                            <button onClick={() => updateQuantity(item.id, 1)} className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white bg-slate-800 rounded-sm font-bold transition-colors">+</button>
                           </div>
-                          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">1 kit / qty</span>
+                          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{strings.qty}</span>
                         </div>
                       </div>
                     ))
@@ -963,71 +1019,71 @@ export default function App() {
                 </div>
 
                 {cart.length > 0 && (
-                  <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex flex-col">
+                  <div className="p-6 border-t border-slate-800 bg-slate-900/50 flex flex-col">
                     {/* STRUKTURIERTES ADRESSFELD */}
                     <div className="mb-6 space-y-3">
-                      <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                        Shipping Address <span className="font-normal lowercase tracking-normal">(Optional)</span>
+                      <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                        {strings.shippingAddress} <span className="font-normal lowercase tracking-normal">({strings.optional})</span>
                       </label>
                       <div className="space-y-2">
                         <input 
                           type="text" 
-                          placeholder="Full Name"
+                          placeholder={strings.fullName}
                           value={address.name}
                           onChange={(e) => setAddress({...address, name: e.target.value})}
-                          className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                          className="w-full bg-slate-950 border border-slate-700 rounded-sm p-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm placeholder:text-slate-600"
                         />
                         <input 
                           type="text" 
-                          placeholder="Street & House Number"
+                          placeholder={strings.streetHouse}
                           value={address.street}
                           onChange={(e) => setAddress({...address, street: e.target.value})}
-                          className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                          className="w-full bg-slate-950 border border-slate-700 rounded-sm p-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm placeholder:text-slate-600"
                         />
                         <div className="flex gap-2">
                           <input 
                             type="text" 
-                            placeholder="ZIP Code"
+                            placeholder={strings.zipCode}
                             value={address.zip}
                             onChange={(e) => setAddress({...address, zip: e.target.value})}
-                            className="w-1/3 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                            className="w-1/3 bg-slate-950 border border-slate-700 rounded-sm p-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm placeholder:text-slate-600"
                           />
                           <input 
                             type="text" 
-                            placeholder="City"
+                            placeholder={strings.city}
                             value={address.city}
                             onChange={(e) => setAddress({...address, city: e.target.value})}
-                            className="w-2/3 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                            className="w-2/3 bg-slate-950 border border-slate-700 rounded-sm p-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm placeholder:text-slate-600"
                           />
                         </div>
                         <input 
                           type="text" 
-                          placeholder="Country"
+                          placeholder={strings.country}
                           value={address.country}
                           onChange={(e) => setAddress({...address, country: e.target.value})}
-                          className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-sm p-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                          className="w-full bg-slate-950 border border-slate-700 rounded-sm p-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 shadow-sm placeholder:text-slate-600"
                         />
                       </div>
                     </div>
 
                     {/* PREISÜBERSICHT MIT VERSAND */}
                     <div className="space-y-3 mb-6">
-                      <div className="flex justify-between items-center text-sm font-bold text-slate-600 dark:text-slate-400">
-                        <span>Subtotal:</span>
+                      <div className="flex justify-between items-center text-sm font-bold text-slate-400">
+                        <span>{strings.subtotal}</span>
                         <span>${subtotal}</span>
                       </div>
-                      <div className="flex justify-between items-center text-sm font-bold text-slate-600 dark:text-slate-400 pb-3 border-b border-slate-200 dark:border-slate-800">
-                        <span>Global Shipping:</span>
+                      <div className="flex justify-between items-center text-sm font-bold text-slate-400 pb-3 border-b border-slate-800">
+                        <span>{strings.globalShipping}</span>
                         <span>${SHIPPING_COST}</span>
                       </div>
-                      <div className="flex justify-between items-center text-base font-black uppercase tracking-wider text-slate-900 dark:text-white">
-                        <span>Total:</span>
-                        <span className="text-2xl text-cyan-600 dark:text-cyan-400">${finalTotal}</span>
+                      <div className="flex justify-between items-center text-base font-black uppercase tracking-wider text-white">
+                        <span>{strings.total}</span>
+                        <span className="text-2xl text-cyan-400">${finalTotal}</span>
                       </div>
                     </div>
 
-                    <button onClick={handleWhatsAppCheckout} className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-extrabold uppercase tracking-widest rounded-sm transition-all shadow-sm flex items-center justify-center gap-2">
-                      <span>Checkout (WhatsApp)</span>
+                    <button onClick={handleWhatsAppCheckout} className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold uppercase tracking-widest rounded-sm transition-all shadow-sm flex items-center justify-center gap-2">
+                      <span>{strings.checkoutWa}</span>
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                     </button>
                   </div>
