@@ -268,7 +268,6 @@ const t = {
     searchPlaceholder: 'Search products, dosages, blends...',
     heroTitle: 'Direct Peptide- & HGH-Manufaktur',
     heroDesc: 'No middlemen. Successfully established in South America, now new in Europe.',
-    animationLabel: 'Animation',
     catalogTitle: 'Our Catalog',
     variantsAvailable: 'Variants Available',
     startingAt: 'Starting at',
@@ -321,7 +320,6 @@ const t = {
     searchPlaceholder: 'Produkte, Dosierungen, Blends suchen...',
     heroTitle: 'Direkte Peptid- & HGH-Manufaktur',
     heroDesc: 'Keine Zwischenmänner. Erfolgreich in Südamerika etabliert, jetzt neu in Europa.',
-    animationLabel: 'Animation',
     catalogTitle: 'Unser Katalog',
     variantsAvailable: 'Varianten verfügbar',
     startingAt: 'Ab',
@@ -375,28 +373,28 @@ function ProductGroupCard({ groupName, products, onClick, startingAtText, varian
   return (
     <div 
       onClick={() => onClick(groupName)}
-      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm p-5 flex flex-col justify-between hover:border-cyan-600 dark:hover:border-cyan-500/50 transition-all shadow-sm hover:shadow cursor-pointer group"
+      className="bg-slate-900 border border-slate-800 rounded-sm p-5 flex flex-col justify-between hover:border-cyan-500 transition-all shadow-sm hover:shadow cursor-pointer group"
     >
-      <div className="w-full h-40 bg-slate-50 dark:bg-slate-950 rounded-sm mb-4 flex items-center justify-center border border-slate-100 dark:border-slate-800 overflow-hidden relative">
+      <div className="w-full h-40 bg-slate-950 rounded-sm mb-4 flex items-center justify-center border border-slate-800 overflow-hidden relative">
         {groupImage ? (
           <img src={groupImage} alt={groupName} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (
-          <span className="text-slate-400 dark:text-slate-600 text-xs uppercase tracking-widest font-bold">No Image</span>
+          <span className="text-slate-600 text-xs uppercase tracking-widest font-bold">No Image</span>
         )}
-        <div className="absolute inset-0 bg-cyan-600/0 dark:bg-cyan-500/0 group-hover:bg-cyan-600/5 dark:group-hover:bg-cyan-500/5 transition-all duration-300"></div>
+        <div className="absolute inset-0 bg-cyan-500/0 group-hover:bg-cyan-500/5 transition-all duration-300"></div>
       </div>
       
       <div>
-        <h3 className="font-bold text-slate-900 dark:text-slate-200 text-lg uppercase tracking-wider leading-snug">{groupName}</h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{products.length} {variantsText}</p>
+        <h3 className="font-bold text-slate-200 text-lg uppercase tracking-wider leading-snug">{groupName}</h3>
+        <p className="text-xs text-slate-400 mt-1">{products.length} {variantsText}</p>
       </div>
 
-      <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
+      <div className="mt-6 pt-4 border-t border-slate-800/60 flex items-center justify-between">
         <div className="flex flex-col">
           <span className="text-[10px] text-slate-500 uppercase tracking-wider">{startingAtText}</span>
-          <span className="text-lg font-black text-slate-900 dark:text-white">${startingPrice}</span>
+          <span className="text-lg font-black text-white">${startingPrice}</span>
         </div>
-        <button className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 group-hover:bg-cyan-600 group-hover:text-white dark:group-hover:bg-cyan-500 dark:group-hover:text-slate-900 font-bold text-xs rounded-sm transition-colors">
+        <button className="px-4 py-2 bg-slate-800 text-slate-300 group-hover:bg-cyan-500 group-hover:text-slate-950 font-bold text-xs rounded-sm transition-colors">
           {viewDetailsText}
         </button>
       </div>
@@ -523,7 +521,7 @@ export default function App() {
 
   const handleWhatsAppCheckout = () => {
     const phone = "85244217796";
-    let message = "Hello, I would like to purchase the following products:\n\n";
+    let message = "I would like to use code SAMMY10 to get a 4% discount\n\nHello, I would like to purchase the following products:\n\n";
     cart.forEach((item, index) => {
       message += `${index + 1}. ${item.name} - Quantity: ${item.quantity} kit(s) - Price: $${item.price * item.quantity}\n`;
     });
@@ -557,7 +555,7 @@ export default function App() {
               <div 
                 key={product.id}
                 onMouseDown={(e) => {
-                  e.preventDefault(); // Verhindert das Wegklicken durch Blur-Events
+                  e.preventDefault();
                   setShowSearchDropdown(false);
                   setMobileSearchOpen(false);
                   handleGroupClick(product.category, product.id);
@@ -592,7 +590,7 @@ export default function App() {
 
   return (
     <div className="dark">
-      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500 selection:text-slate-900 transition-colors duration-300">
+      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-300">
         
         {/* HEADER */}
         <header className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 transition-colors duration-300">
@@ -783,7 +781,7 @@ export default function App() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {categoriesList.map(category => {
                   const matchesSearch = category.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                      allProducts.some(p => p.category === category && p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+                                        allProducts.some(p => p.category === category && p.name.toLowerCase().includes(searchQuery.toLowerCase()));
                   
                   if (!matchesSearch) return null;
 
